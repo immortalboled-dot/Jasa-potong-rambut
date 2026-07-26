@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CukurGo - Jasa Potong Rambut Panggilan</title>
-    <!-- Tailwind CSS CDN -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons CDN -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .transition-all { transition: all 0.3s ease; }
@@ -34,8 +34,8 @@
     <!-- ================= MAIN CONTAINER ================= -->
     <main class="max-w-7xl mx-auto px-4 py-6">
 
-        <!-- ================= SECTION CUSTOMER ================= -->
-        <section id="customerSection" class="space-y-6">
+        <!-- 1. SECTION CUSTOMER -->
+        <div id="customerSection" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h2 class="text-2xl font-bold mb-2 text-slate-900">Pesan Tukang Cukur ke Rumah</h2>
                 <p class="text-gray-500 text-sm mb-6">Isi formulir di bawah ini dengan lengkap untuk memesan layanan.</p>
@@ -51,9 +51,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Layanan & Harga</label>
-                        <select id="serviceType" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
-                            <!-- Diisi dinamis oleh JavaScript -->
-                        </select>
+                        <select id="serviceType" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none"></select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap</label>
@@ -61,7 +59,7 @@
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Catatan / Deskripsi Tambahan</label>
-                        <textarea id="custDesc" rows="2" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Model rambut pilihan atau catatan khusus..."></textarea>
+                        <textarea id="custDesc" rows="2" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Catatan khusus untuk barber..."></textarea>
                     </div>
                     <div class="md:col-span-2 flex justify-end mt-2">
                         <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
@@ -78,10 +76,10 @@
                     <p class="text-sm text-gray-400 italic">Belum ada pesanan aktif.</p>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- ================= SECTION ADMIN ================= -->
-        <section id="adminSection" class="hidden space-y-6">
+        <!-- 2. SECTION ADMIN PANEL -->
+        <div id="adminSection" class="hidden space-y-6">
             <!-- Statistik Ringkas -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
@@ -101,13 +99,13 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 font-medium">Status Sistem</p>
-                        <h4 class="text-lg font-bold text-emerald-600">Admin Terverifikasi</h4>
+                        <h4 class="text-lg font-bold text-emerald-600">Admin Terautentikasi</h4>
                     </div>
                     <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl text-xl"><i class="fa-solid fa-shield-halved"></i></div>
                 </div>
             </div>
 
-            <!-- Pengaturan Toko, Tampilan, & Akun Admin -->
+            <!-- Panel Pengaturan Toko & Manajemen Akun Admin -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gear mr-2 text-amber-500"></i>Pengaturan Toko & Keamanan Akun</h3>
@@ -116,15 +114,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Jasa / Admin</label>
-                        <input type="text" id="settingAdminName" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" value="CukurGo Official">
+                        <input type="text" id="settingAdminName" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">No. WhatsApp Admin</label>
-                        <input type="text" id="settingAdminPhone" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" value="6281234567890">
+                        <input type="text" id="settingAdminPhone" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pengaturan Ongkir (Rp)</label>
-                        <input type="number" id="settingOngkir" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" value="10000">
+                        <input type="number" id="settingOngkir" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Background Web</label>
@@ -137,25 +135,24 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar / Ganti Username Admin</label>
-                        <input type="text" id="settingAdminUser" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Username baru">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar / Ubah Username Admin</label>
+                        <input type="text" id="settingAdminUser" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Khusus / Kata Sandi Baru</label>
-                        <input type="password" id="settingAdminPass" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi khusus baru">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar / Ubah Kata Sandi Khusus</label>
+                        <input type="password" id="settingAdminPass" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Ketik sandi baru...">
                     </div>
                 </div>
             </div>
 
-            <!-- Kelola Daftar & Harga Layanan -->
+            <!-- Panel Harga Layanan -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 class="text-lg font-bold text-slate-900 mb-4"><i class="fa-solid fa-tags mr-2 text-amber-500"></i>Kelola Daftar & Harga Layanan</h3>
                 
-                <!-- Form Tambah Layanan -->
                 <form onsubmit="addServiceItem(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6 p-4 bg-gray-50 rounded-xl border">
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Nama Layanan</label>
-                        <input type="text" id="newServiceName" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500" placeholder="Contoh: Potong Rambut VIP">
+                        <input type="text" id="newServiceName" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500" placeholder="Contoh: Cukur Premium">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Harga (Rp)</label>
@@ -175,14 +172,12 @@
                                 <th class="p-3 rounded-r-xl text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="priceListTable" class="divide-y divide-gray-100">
-                            <!-- Diisi dinamis -->
-                        </tbody>
+                        <tbody id="priceListTable" class="divide-y divide-gray-100"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Daftar Pesanan Masuk (Admin Dashboard) -->
+            <!-- Panel Pesanan Masuk -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-clipboard-list mr-2 text-amber-500"></i>Daftar Pesanan Masuk</h3>
@@ -194,27 +189,25 @@
                             <tr class="bg-gray-100 text-gray-600">
                                 <th class="p-3 rounded-l-xl">Waktu & Tanggal</th>
                                 <th class="p-3">Customer</th>
-                                <th class="p-3">Jasa & Catatan</th>
+                                <th class="p-3">Barang / Jasa</th>
                                 <th class="p-3">Alamat & WA</th>
                                 <th class="p-3">Total Pesanan</th>
                                 <th class="p-3">Status</th>
-                                <th class="p-3 rounded-r-xl text-center">Aksi / WA</th>
+                                <th class="p-3 rounded-r-xl text-center">Aksi / Kirim WA</th>
                             </tr>
                         </thead>
-                        <tbody id="adminOrderTable" class="divide-y divide-gray-100">
-                            <!-- Diisi dinamis -->
-                        </tbody>
+                        <tbody id="adminOrderTable" class="divide-y divide-gray-100"></tbody>
                     </table>
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- ================= MODAL LOGIN ADMIN ================= -->
     <div id="loginModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex justify-center items-center z-50 px-4">
         <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm">
-            <h3 class="text-lg font-bold text-slate-900 mb-2">Login Admin Panel</h3>
-            <p class="text-xs text-gray-500 mb-4">Masukkan Username dan Kode Khusus / Kata Sandi Anda.</p>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Login Panel Admin</h3>
+            <p class="text-xs text-gray-500 mb-4">Masukkan Username dan Kata Sandi Khusus untuk masuk.</p>
             
             <div class="space-y-3 mb-4">
                 <div>
@@ -222,7 +215,7 @@
                     <input type="text" id="adminUserInput" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Username...">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Kode Khusus / Kata Sandi</label>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Kata Sandi Khusus</label>
                     <input type="password" id="adminPasswordInput" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi...">
                 </div>
             </div>
@@ -236,7 +229,7 @@
 
     <!-- ================= JAVASCRIPT UTAMA ================= -->
     <script>
-        // State & LocalStorage Initialization
+        // 1. STATE & STORAGE INISIALISASI
         let orders = JSON.parse(localStorage.getItem('cukurgo_orders')) || [];
         let settings = JSON.parse(localStorage.getItem('cukurgo_settings')) || {
             adminName: "CukurGo Official",
@@ -260,7 +253,7 @@
             checkSessionState();
         };
 
-        // Navigasi Tab Utama
+        // 2. NAVIGASI & AUTENTIKASI ADMIN
         function switchTab(role) {
             const custSec = document.getElementById('customerSection');
             const adminSec = document.getElementById('adminSection');
@@ -275,7 +268,6 @@
             }
         }
 
-        // Keamanan & Sesi Login Admin
         function checkAdminAuth() {
             if(sessionStorage.getItem('cukurgo_is_auth') === 'true') {
                 openAdminPanel();
@@ -291,16 +283,16 @@
         }
 
         function verifyAdminPassword() {
-            const u = document.getElementById('adminUserInput').value;
-            const p = document.getElementById('adminPasswordInput').value;
+            const user = document.getElementById('adminUserInput').value;
+            const pass = document.getElementById('adminPasswordInput').value;
             
-            if(u === settings.adminUser && p === settings.adminPass) {
+            if(user === settings.adminUser && pass === settings.adminPass) {
                 sessionStorage.setItem('cukurgo_is_auth', 'true');
                 closeLoginModal();
                 openAdminPanel();
                 checkSessionState();
             } else {
-                alert('Username atau Kode Khusus / Kata Sandi Salah!');
+                alert('Username atau Kata Sandi Khusus salah!');
             }
         }
 
@@ -312,12 +304,8 @@
         }
 
         function checkSessionState() {
-            const logoutBtn = document.getElementById('navLogoutBtn');
-            if(sessionStorage.getItem('cukurgo_is_auth') === 'true') {
-                logoutBtn.classList.remove('hidden');
-            } else {
-                logoutBtn.classList.add('hidden');
-            }
+            const isAuth = sessionStorage.getItem('cukurgo_is_auth') === 'true';
+            document.getElementById('navLogoutBtn').classList.toggle('hidden', !isAuth);
         }
 
         function openAdminPanel() {
@@ -331,7 +319,7 @@
             loadSettingsToUI();
         }
 
-        // Pengaturan Tampilan & Profil Admin
+        // 3. PENGATURAN UMUM & AKUN ADMIN
         function changeBackground(colorClass) {
             document.getElementById('pageBody').className = `${colorClass} text-gray-800 font-sans transition-all duration-300`;
             settings.bgColor = colorClass;
@@ -361,11 +349,11 @@
             
             localStorage.setItem('cukurgo_settings', JSON.stringify(settings));
             document.getElementById('brandTitle').innerText = settings.adminName;
-            alert('Pengaturan & Kredensial berhasil disimpan!');
+            alert('Pengaturan toko & kredensial admin berhasil disimpan!');
             renderAdminDashboard();
         }
 
-        // Manajemen Harga & Layanan
+        // 4. MANAJEMEN HARGA LAYANAN
         function renderPriceManagementTable() {
             const tbody = document.getElementById('priceListTable');
             if(servicePrices.length === 0) {
@@ -373,17 +361,17 @@
                 return;
             }
 
-            tbody.innerHTML = servicePrices.map((s, idx) => `
+            tbody.innerHTML = servicePrices.map((s, index) => `
                 <tr class="hover:bg-gray-50">
                     <td class="p-3 font-medium text-slate-900">
-                        <input type="text" value="${s.name}" id="editName-${idx}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
+                        <input type="text" value="${s.name}" id="editName-${index}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
                     </td>
                     <td class="p-3 font-bold text-slate-900">
-                        <input type="number" value="${s.price}" id="editPrice-${idx}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
+                        <input type="number" value="${s.price}" id="editPrice-${index}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
                     </td>
                     <td class="p-3 text-center space-x-2">
-                        <button onclick="updateServiceItem(${idx})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-save"></i></button>
-                        <button onclick="deleteServiceItem(${idx})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="updateServiceItem(${index})" title="Simpan" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-save"></i></button>
+                        <button onclick="deleteServiceItem(${index})" title="Hapus" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -402,24 +390,24 @@
 
             renderPriceManagementTable();
             renderCustomerServiceOptions();
-            alert('Layanan berhasil ditambahkan!');
+            alert('Layanan baru berhasil ditambahkan!');
         }
 
-        function updateServiceItem(idx) {
-            const name = document.getElementById(`editName-${idx}`).value;
-            const price = parseInt(document.getElementById(`editPrice-${idx}`).value);
+        function updateServiceItem(index) {
+            const name = document.getElementById(`editName-${index}`).value;
+            const price = parseInt(document.getElementById(`editPrice-${index}`).value);
 
-            servicePrices[idx] = { name, price };
+            servicePrices[index] = { name, price };
             localStorage.setItem('cukurgo_services', JSON.stringify(servicePrices));
 
             renderPriceManagementTable();
             renderCustomerServiceOptions();
-            alert('Harga diperbarui!');
+            alert('Harga layanan diperbarui!');
         }
 
-        function deleteServiceItem(idx) {
-            if(confirm('Hapus layanan ini?')) {
-                servicePrices.splice(idx, 1);
+        function deleteServiceItem(index) {
+            if(confirm('Yakin ingin menghapus layanan ini?')) {
+                servicePrices.splice(index, 1);
                 localStorage.setItem('cukurgo_services', JSON.stringify(servicePrices));
                 renderPriceManagementTable();
                 renderCustomerServiceOptions();
@@ -432,13 +420,12 @@
                 selectEl.innerHTML = `<option value="">-- Layanan Kosong --</option>`;
                 return;
             }
-
             selectEl.innerHTML = servicePrices.map(s => `
                 <option value="${s.name} - Rp ${s.price.toLocaleString('id-ID')}">${s.name} - Rp ${s.price.toLocaleString('id-ID')}</option>
             `).join('');
         }
 
-        // Transaksi & Pesanan Customer
+        // 5. MANAJEMEN PESANAN & WHATSAPP
         function submitOrder(e) {
             e.preventDefault();
             
@@ -450,17 +437,18 @@
 
             let matchedPrice = serviceFull.match(/Rp\s([\d\.]+)/);
             let servicePrice = matchedPrice ? parseInt(matchedPrice[1].replace(/\./g, '')) : 0;
-            const total = servicePrice + settings.ongkir;
+            let total = servicePrice + settings.ongkir;
 
-            const timeString = new Date().toLocaleDateString('id-ID', {
+            const now = new Date();
+            const timeString = now.toLocaleDateString('id-ID', {
                 day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
             const newOrder = {
                 id: 'ORD-' + Date.now(),
                 datetime: timeString,
-                name, phone, item: serviceFull, address, desc: desc || '-', total,
-                status: 'Pesanan sudah diterima oleh admin'
+                name, phone, item: serviceFull, address, desc: desc || '-',
+                total, status: 'Pesanan sudah diterima oleh admin'
             };
 
             orders.unshift(newOrder);
@@ -469,7 +457,7 @@
             document.getElementById('orderForm').reset();
             renderCustomerOrders();
             renderAdminDashboard();
-            alert('Pesanan berhasil dikirim!');
+            alert('Pesanan berhasil dikirim ke Admin!');
         }
 
         function renderCustomerOrders() {
@@ -497,7 +485,6 @@
             `).join('');
         }
 
-        // Dashboard Admin
         function renderAdminDashboard() {
             document.getElementById('statTotal').innerText = orders.length;
             document.getElementById('statOngkir').innerText = `Rp ${settings.ongkir.toLocaleString('id-ID')}`;
@@ -517,9 +504,9 @@
                     <td class="p-3 font-bold text-slate-900">Rp ${o.total.toLocaleString('id-ID')}</td>
                     <td class="p-3">
                         <select onchange="updateOrderStatus(${index}, this.value)" class="text-xs border rounded-lg px-2 py-1 outline-none font-medium bg-amber-50 text-amber-800">
-                            <option value="Pesanan sudah diterima oleh admin" ${o.status === 'Pesanan sudah diterima oleh admin' ? 'selected' : ''}>Pesanan sudah diterima oleh admin</option>
-                            <option value="Sedang di proses, mohon tunggu" ${o.status === 'Sedang di proses, mohon tunggu' ? 'selected' : ''}>Sedang di proses, mohon tunggu</option>
-                            <option value="Pesanan selesai" ${o.status === 'Pesanan selesai' ? 'selected' : ''}>Pesanan selesai</option>
+                            <option value="Pesanan sudah diterima oleh admin" ${o.status === 'Pesanan sudah diterima oleh admin' ? 'selected' : ''}>Diterima Admin</option>
+                            <option value="Sedang di proses, mohon tunggu" ${o.status === 'Sedang di proses, mohon tunggu' ? 'selected' : ''}>Sedang Diproses</option>
+                            <option value="Pesanan selesai" ${o.status === 'Pesanan selesai' ? 'selected' : ''}>Selesai</option>
                         </select>
                     </td>
                     <td class="p-3 text-center space-x-1">
@@ -539,7 +526,7 @@
         function sendWhatsApp(index) {
             const o = orders[index];
             let phoneFormatted = o.phone.replace(/^0/, '62');
-            const message = `Halo Kak *${o.name}*,\n\nUpdate pesanan Anda di *${settings.adminName}*:\n\n*Layanan:* ${o.item}\n*Alamat:* ${o.address}\n*Total:* Rp ${o.total.toLocaleString('id-ID')}\n*Status:* *${o.status}*\n\nTerima kasih! 🙏`;
+            const message = `Halo Kak *${o.name}*,\n\nUpdate pesanan Anda di *${settings.adminName}*:\n\n*Layanan:* ${o.item}\n*Alamat:* ${o.address}\n*Total:* Rp ${o.total.toLocaleString('id-ID')}\n*Status:* *${o.status}*\n\nTerima kasih telah menggunakan jasa kami! 🙏`;
             window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
