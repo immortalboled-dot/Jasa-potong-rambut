@@ -23,7 +23,11 @@
             </div>
             <div class="flex items-center space-x-3">
                 <button onclick="switchTab('customer')" id="navCustBtn" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-900 font-semibold text-sm transition">Customer</button>
-                <button onclick="checkAdminAuth()" id="navAdminBtn" class="px-3 py-1.5 rounded-lg bg-slate-800 text-gray-300 font-semibold text-sm hover:bg-slate-700 transition">Admin</button>
+                <button onclick="checkAdminAuth()" id="navAdminBtn" class="px-3 py-1.5 rounded-lg bg-slate-800 text-gray-300 font-semibold text-sm hover:bg-slate-700 transition">Admin Panel</button>
+                <!-- Tombol Logout Admin (Hanya muncul jika sudah login) -->
+                <button id="navLogoutBtn" onclick="adminLogout()" class="hidden px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition flex items-center gap-1">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
             </div>
         </div>
     </nav>
@@ -47,9 +51,9 @@
                         <input type="tel" id="custPhone" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Contoh: 08123456789">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Layanan (Barang/Jasa & Harga)</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Layanan & Harga</label>
                         <select id="serviceType" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
-                            <!-- Opsi akan dimuat otomatis dari Admin -->
+                            <!-- Opsi dimuat otomatis dari Admin -->
                         </select>
                     </div>
                     <div>
@@ -98,19 +102,19 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 font-medium">Status Sistem</p>
-                        <h4 class="text-lg font-bold text-emerald-600">Online / Siap</h4>
+                        <h4 class="text-lg font-bold text-emerald-600">Admin Aktif</h4>
                     </div>
-                    <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl text-xl"><i class="fa-solid fa-circle-check"></i></div>
+                    <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl text-xl"><i class="fa-solid fa-shield-halved"></i></div>
                 </div>
             </div>
 
-            <!-- Panel Pengaturan Toko (Nama, WA, Ongkir, Background) -->
+            <!-- Panel Pengaturan Toko & Keamanan Akun Admin (BARU) -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gear mr-2 text-amber-500"></i>Pengaturan Umum Toko</h3>
+                    <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gear mr-2 text-amber-500"></i>Pengaturan Toko & Daftar Akun Admin</h3>
                     <button onclick="saveAdminSettings()" class="bg-slate-900 text-white text-sm px-4 py-2 rounded-xl hover:bg-slate-800 transition">Simpan Pengaturan</button>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nama Jasa / Admin</label>
                         <input type="text" id="settingAdminName" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" value="CukurGo Official">
@@ -133,10 +137,18 @@
                             <option value="bg-sky-50">Biru Langit</option>
                         </select>
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar / Ubah Kata Sandi Khusus</label>
+                        <input type="password" id="settingAdminPass" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi baru admin">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar Akun Admin Baru (Username)</label>
+                        <input type="text" id="settingAdminUser" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Username admin">
+                    </div>
                 </div>
             </div>
 
-            <!-- Panel Pengaturan Daftar Harga Jasa Potong Rambut (BARU) -->
+            <!-- Panel Pengaturan Daftar Harga Jasa Potong Rambut -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 class="text-lg font-bold text-slate-900 mb-4"><i class="fa-solid fa-tags mr-2 text-amber-500"></i>Kelola Daftar & Harga Layanan</h3>
                 
@@ -204,8 +216,19 @@
     <div id="loginModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex justify-center items-center z-50 px-4">
         <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm">
             <h3 class="text-lg font-bold text-slate-900 mb-2">Login Kata Sandi Khusus</h3>
-            <p class="text-xs text-gray-500 mb-4">Masukkan kata sandi admin untuk mengakses panel manajemen jasa.</p>
-            <input type="password" id="adminPasswordInput" class="w-full px-4 py-2 border rounded-xl mb-4 text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi...">
+            <p class="text-xs text-gray-500 mb-4">Masukkan username dan kata sandi khusus admin untuk masuk.</p>
+            
+            <div class="space-y-3 mb-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Username Admin</label>
+                    <input type="text" id="adminUserInput" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Username...">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Kata Sandi Khusus</label>
+                    <input type="password" id="adminPasswordInput" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi...">
+                </div>
+            </div>
+
             <div class="flex justify-end space-x-2">
                 <button onclick="closeLoginModal()" class="px-4 py-2 text-gray-500 text-sm hover:text-gray-700">Batal</button>
                 <button onclick="verifyAdminPassword()" class="px-4 py-2 bg-amber-500 text-slate-900 font-bold rounded-xl text-sm hover:bg-amber-600 transition">Masuk</button>
@@ -222,10 +245,10 @@
             adminPhone: "6281234567890",
             ongkir: 10000,
             bgColor: "bg-gray-50",
+            adminUser: "admin",
             adminPass: "admin123"
         };
 
-        // Daftar Harga Layanan Default (Bisa diatur langsung oleh Admin)
         let servicePrices = JSON.parse(localStorage.getItem('cukurgo_services')) || [
             { name: "Potong Rambut Dewasa", price: 45000 },
             { name: "Potong Rambut Anak", price: 35000 },
@@ -238,8 +261,7 @@
             loadSettingsToUI();
             renderCustomerServiceOptions();
             renderCustomerOrders();
-            renderAdminDashboard();
-            renderPriceManagementTable();
+            checkSessionState();
         };
 
         // Ganti Tab Antara Customer dan Admin
@@ -269,17 +291,38 @@
 
         function closeLoginModal() {
             document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('adminUserInput').value = '';
             document.getElementById('adminPasswordInput').value = '';
         }
 
         function verifyAdminPassword() {
+            const user = document.getElementById('adminUserInput').value;
             const pass = document.getElementById('adminPasswordInput').value;
-            if(pass === settings.adminPass) {
+            
+            if(user === settings.adminUser && pass === settings.adminPass) {
                 sessionStorage.setItem('cukurgo_is_auth', 'true');
                 closeLoginModal();
                 openAdminPanel();
+                checkSessionState();
             } else {
-                alert('Kata sandi khusus salah!');
+                alert('Username atau Kata sandi khusus salah!');
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('cukurgo_is_auth');
+            switchTab('customer');
+            checkSessionState();
+            alert('Anda telah berhasil Log Out.');
+        }
+
+        function checkSessionState() {
+            const isAuth = sessionStorage.getItem('cukurgo_is_auth');
+            const logoutBtn = document.getElementById('navLogoutBtn');
+            if(isAuth === 'true') {
+                logoutBtn.classList.remove('hidden');
+            } else {
+                logoutBtn.classList.add('hidden');
             }
         }
 
@@ -293,8 +336,10 @@
             adminSec.classList.remove('hidden');
             adminBtn.className = "px-3 py-1.5 rounded-lg bg-amber-500 text-slate-900 font-semibold text-sm transition";
             custBtn.className = "px-3 py-1.5 rounded-lg bg-slate-800 text-gray-300 font-semibold text-sm hover:bg-slate-700 transition";
+            
             renderAdminDashboard();
             renderPriceManagementTable();
+            loadSettingsToUI();
         }
 
         // Kelola Background Website
@@ -308,6 +353,8 @@
             document.getElementById('settingAdminPhone').value = settings.adminPhone;
             document.getElementById('settingOngkir').value = settings.ongkir;
             document.getElementById('settingBgColor').value = settings.bgColor;
+            document.getElementById('settingAdminUser').value = settings.adminUser || "admin";
+            document.getElementById('settingAdminPass').value = settings.adminPass || "";
             document.getElementById('brandTitle').innerText = settings.adminName;
             changeBackground(settings.bgColor);
         }
@@ -318,9 +365,14 @@
             settings.ongkir = parseInt(document.getElementById('settingOngkir').value) || 0;
             settings.bgColor = document.getElementById('settingBgColor').value;
             
+            const newU = document.getElementById('settingAdminUser').value;
+            const newP = document.getElementById('settingAdminPass').value;
+            if(newU) settings.adminUser = newU;
+            if(newP) settings.adminPass = newP;
+            
             localStorage.setItem('cukurgo_settings', JSON.stringify(settings));
             document.getElementById('brandTitle').innerText = settings.adminName;
-            alert('Pengaturan umum berhasil disimpan!');
+            alert('Pengaturan toko & kredensial admin berhasil disimpan!');
             renderAdminDashboard();
         }
 
@@ -385,7 +437,6 @@
             }
         }
 
-        // Render Pilihan Jasa & Harga di Dashboard Customer secara Otomatis
         function renderCustomerServiceOptions() {
             const selectEl = document.getElementById('serviceType');
             if(servicePrices.length === 0) {
@@ -408,13 +459,10 @@
             const address = document.getElementById('custAddress').value;
             const desc = document.getElementById('custDesc').value;
 
-            // Ambil harga dari teks layanan yang dipilih customer menggunakan regex angka
             let matchedPrice = serviceFull.match(/Rp\s([\d\.]+)/);
             let servicePrice = matchedPrice ? parseInt(matchedPrice[1].replace(/\./g, '')) : 0;
-
             const total = servicePrice + settings.ongkir;
 
-            // Ambil format waktu tanggal bulan tahun jam
             const now = new Date();
             const timeString = now.toLocaleDateString('id-ID', {
                 day: '2-digit', month: 'long', year: 'numeric',
@@ -442,7 +490,6 @@
             alert('Pesanan berhasil dikirim ke Admin!');
         }
 
-        // Render Tampilan Customer
         function renderCustomerOrders() {
             const container = document.getElementById('customerOrderList');
             if(orders.length === 0) {
@@ -468,7 +515,6 @@
             `).join('');
         }
 
-        // Render Admin Dashboard
         function renderAdminDashboard() {
             document.getElementById('statTotal').innerText = orders.length;
             document.getElementById('statOngkir').innerText = `Rp ${settings.ongkir.toLocaleString('id-ID')}`;
@@ -501,14 +547,12 @@
             `).join('');
         }
 
-        // Ubah Status Pesanan
         function updateOrderStatus(index, newStatus) {
             orders[index].status = newStatus;
             localStorage.setItem('cukurgo_orders', JSON.stringify(orders));
             renderCustomerOrders();
         }
 
-        // Kirim Pesan WhatsApp Otomatis ke Customer
         function sendWhatsApp(index) {
             const o = orders[index];
             let phoneFormatted = o.phone.replace(/^0/, '62');
@@ -519,7 +563,6 @@
             window.open(waUrl, '_blank');
         }
 
-        // Hapus Satuan / Semua Riwayat
         function deleteOrder(index) {
             if(confirm('Yakin ingin menghapus pesanan ini?')) {
                 orders.splice(index, 1);
