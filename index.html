@@ -47,12 +47,9 @@
                         <input type="tel" id="custPhone" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Contoh: 08123456789">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Layanan (Barang/Jasa)</label>
-                        <select id="serviceType" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
-                            <option value="Potong Rambut Dewasa - Rp 45.000">Potong Rambut Dewasa - Rp 45.000</option>
-                            <option value="Potong Rambut Anak - Rp 35.000">Potong Rambut Anak - Rp 35.000</option>
-                            <option value="Potong + Cuci + Styling - Rp 65.000">Potong + Cuci + Styling - Rp 65.000</option>
-                            <option value="Cukur Jenggot & Kumis - Rp 25.000">Cukur Jenggot & Kumis - Rp 25.000</option>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Layanan (Barang/Jasa & Harga)</label>
+                        <select id="serviceType" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
+                            <!-- Opsi akan dimuat otomatis dari Admin -->
                         </select>
                     </div>
                     <div>
@@ -107,10 +104,10 @@
                 </div>
             </div>
 
-            <!-- Panel Pengaturan Admin (Setting Jasa, Warna, Ongkir, WA) -->
+            <!-- Panel Pengaturan Toko (Nama, WA, Ongkir, Background) -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gear mr-2 text-amber-500"></i>Pengaturan Toko & Admin</h3>
+                    <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gear mr-2 text-amber-500"></i>Pengaturan Umum Toko</h3>
                     <button onclick="saveAdminSettings()" class="bg-slate-900 text-white text-sm px-4 py-2 rounded-xl hover:bg-slate-800 transition">Simpan Pengaturan</button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -139,6 +136,42 @@
                 </div>
             </div>
 
+            <!-- Panel Pengaturan Daftar Harga Jasa Potong Rambut (BARU) -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <h3 class="text-lg font-bold text-slate-900 mb-4"><i class="fa-solid fa-tags mr-2 text-amber-500"></i>Kelola Daftar & Harga Layanan</h3>
+                
+                <!-- Form Tambah Layanan Baru -->
+                <form onsubmit="addServiceItem(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6 p-4 bg-gray-50 rounded-xl border">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Layanan / Barang</label>
+                        <input type="text" id="newServiceName" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500" placeholder="Contoh: Potong Rambut Premium">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Harga (Rp)</label>
+                        <input type="number" id="newServicePrice" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500" placeholder="Contoh: 50000">
+                    </div>
+                    <div class="flex items-end">
+                        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold py-2 px-4 rounded-lg text-sm transition"><i class="fa-solid fa-plus mr-1"></i> Tambah Layanan</button>
+                    </div>
+                </form>
+
+                <!-- Tabel Daftar Harga Aktif -->
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600">
+                                <th class="p-3 rounded-l-xl">Nama Layanan</th>
+                                <th class="p-3">Harga</th>
+                                <th class="p-3 rounded-r-xl text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="priceListTable" class="divide-y divide-gray-100">
+                            <!-- Data dimuat lewat Javascript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Daftar Pesanan Masuk (Admin Dashboard) -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-4">
@@ -159,7 +192,7 @@
                             </tr>
                         </thead>
                         <tbody id="adminOrderTable" class="divide-y divide-gray-100">
-                            <!-- Data akan dimuat otomatis lewat Javascript -->
+                            <!-- Data dimuat lewat Javascript -->
                         </tbody>
                     </table>
                 </div>
@@ -192,11 +225,21 @@
             adminPass: "admin123"
         };
 
+        // Daftar Harga Layanan Default (Bisa diatur langsung oleh Admin)
+        let servicePrices = JSON.parse(localStorage.getItem('cukurgo_services')) || [
+            { name: "Potong Rambut Dewasa", price: 45000 },
+            { name: "Potong Rambut Anak", price: 35000 },
+            { name: "Potong + Cuci + Styling", price: 65000 },
+            { name: "Cukur Jenggot & Kumis", price: 25000 }
+        ];
+
         // Jalankan saat halaman dimuat
         window.onload = function() {
             loadSettingsToUI();
+            renderCustomerServiceOptions();
             renderCustomerOrders();
             renderAdminDashboard();
+            renderPriceManagementTable();
         };
 
         // Ganti Tab Antara Customer dan Admin
@@ -251,6 +294,7 @@
             adminBtn.className = "px-3 py-1.5 rounded-lg bg-amber-500 text-slate-900 font-semibold text-sm transition";
             custBtn.className = "px-3 py-1.5 rounded-lg bg-slate-800 text-gray-300 font-semibold text-sm hover:bg-slate-700 transition";
             renderAdminDashboard();
+            renderPriceManagementTable();
         }
 
         // Kelola Background Website
@@ -276,8 +320,82 @@
             
             localStorage.setItem('cukurgo_settings', JSON.stringify(settings));
             document.getElementById('brandTitle').innerText = settings.adminName;
-            alert('Pengaturan berhasil disimpan!');
+            alert('Pengaturan umum berhasil disimpan!');
             renderAdminDashboard();
+        }
+
+        // --- FITUR MANAJEMEN HARGA OLEH ADMIN ---
+        function renderPriceManagementTable() {
+            const tbody = document.getElementById('priceListTable');
+            if(servicePrices.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-gray-400 italic">Belum ada daftar layanan.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = servicePrices.map((s, index) => `
+                <tr class="hover:bg-gray-50">
+                    <td class="p-3 font-medium text-slate-900">
+                        <input type="text" value="${s.name}" id="editName-${index}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
+                    </td>
+                    <td class="p-3 font-bold text-slate-900">
+                        <input type="number" value="${s.price}" id="editPrice-${index}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
+                    </td>
+                    <td class="p-3 text-center space-x-2">
+                        <button onclick="updateServiceItem(${index})" title="Simpan Perubahan" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-save"></i></button>
+                        <button onclick="deleteServiceItem(${index})" title="Hapus Layanan" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function addServiceItem(e) {
+            e.preventDefault();
+            const name = document.getElementById('newServiceName').value;
+            const price = parseInt(document.getElementById('newServicePrice').value);
+
+            servicePrices.push({ name, price });
+            localStorage.setItem('cukurgo_services', JSON.stringify(servicePrices));
+
+            document.getElementById('newServiceName').value = '';
+            document.getElementById('newServicePrice').value = '';
+
+            renderPriceManagementTable();
+            renderCustomerServiceOptions();
+            alert('Layanan dan harga baru berhasil ditambahkan!');
+        }
+
+        function updateServiceItem(index) {
+            const name = document.getElementById(`editName-${index}`).value;
+            const price = parseInt(document.getElementById(`editPrice-${index}`).value);
+
+            servicePrices[index] = { name, price };
+            localStorage.setItem('cukurgo_services', JSON.stringify(servicePrices));
+
+            renderPriceManagementTable();
+            renderCustomerServiceOptions();
+            alert('Harga layanan berhasil diperbarui!');
+        }
+
+        function deleteServiceItem(index) {
+            if(confirm('Yakin ingin menghapus layanan ini?')) {
+                servicePrices.splice(index, 1);
+                localStorage.setItem('cukurgo_services', JSON.stringify(servicePrices));
+                renderPriceManagementTable();
+                renderCustomerServiceOptions();
+            }
+        }
+
+        // Render Pilihan Jasa & Harga di Dashboard Customer secara Otomatis
+        function renderCustomerServiceOptions() {
+            const selectEl = document.getElementById('serviceType');
+            if(servicePrices.length === 0) {
+                selectEl.innerHTML = `<option value="">-- Layanan Belum Tersedia --</option>`;
+                return;
+            }
+
+            selectEl.innerHTML = servicePrices.map(s => `
+                <option value="${s.name} - Rp ${s.price.toLocaleString('id-ID')}">${s.name} - Rp ${s.price.toLocaleString('id-ID')}</option>
+            `).join('');
         }
 
         // Kirim Pesanan oleh Customer
@@ -290,11 +408,9 @@
             const address = document.getElementById('custAddress').value;
             const desc = document.getElementById('custDesc').value;
 
-            // Ekstrak harga layanan dari string pilihan
-            let servicePrice = 45000;
-            if(serviceFull.includes('35.000')) servicePrice = 35000;
-            if(serviceFull.includes('65.000')) servicePrice = 65000;
-            if(serviceFull.includes('25.000')) servicePrice = 25000;
+            // Ambil harga dari teks layanan yang dipilih customer menggunakan regex angka
+            let matchedPrice = serviceFull.match(/Rp\s([\d\.]+)/);
+            let servicePrice = matchedPrice ? parseInt(matchedPrice[1].replace(/\./g, '')) : 0;
 
             const total = servicePrice + settings.ongkir;
 
@@ -395,7 +511,6 @@
         // Kirim Pesan WhatsApp Otomatis ke Customer
         function sendWhatsApp(index) {
             const o = orders[index];
-            // Format nomor HP (pastikan format 62...)
             let phoneFormatted = o.phone.replace(/^0/, '62');
             
             const message = `Halo Kak *${o.name}*,\n\nUpdate pesanan Anda di *${settings.adminName}*:\n\n*Layanan:* ${o.item}\n*Alamat:* ${o.address}\n*Total:* Rp ${o.total.toLocaleString('id-ID')}\n*Status:* *${o.status}*\n\nTerima kasih telah menggunakan jasa kami! 🙏`;
