@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CukurGo - Jasa Potong Rambut Panggilan</title>
-    <!-- Tailwind CSS untuk Desain Rapi & Modern -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome untuk Ikon -->
+    <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .transition-all { transition: all 0.3s ease; }
@@ -14,8 +14,8 @@
 </head>
 <body id="pageBody" class="bg-gray-50 text-gray-800 font-sans transition-all duration-300">
 
-    <!-- NAVBAR -->
-    <nav id="navHeader" class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+    <!-- ================= NAVBAR ================= -->
+    <nav class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <i class="fa-solid fa-scissors text-amber-400 text-2xl"></i>
@@ -24,7 +24,6 @@
             <div class="flex items-center space-x-3">
                 <button onclick="switchTab('customer')" id="navCustBtn" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-900 font-semibold text-sm transition">Customer</button>
                 <button onclick="checkAdminAuth()" id="navAdminBtn" class="px-3 py-1.5 rounded-lg bg-slate-800 text-gray-300 font-semibold text-sm hover:bg-slate-700 transition">Admin Panel</button>
-                <!-- Tombol Logout Admin (Hanya muncul jika sudah login) -->
                 <button id="navLogoutBtn" onclick="adminLogout()" class="hidden px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold text-sm hover:bg-red-700 transition flex items-center gap-1">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </button>
@@ -32,14 +31,14 @@
         </div>
     </nav>
 
-    <!-- CONTAINER UTAMA -->
+    <!-- ================= MAIN CONTAINER ================= -->
     <main class="max-w-7xl mx-auto px-4 py-6">
 
         <!-- ================= SECTION CUSTOMER ================= -->
-        <div id="customerSection" class="space-y-6">
+        <section id="customerSection" class="space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h2 class="text-2xl font-bold mb-2 text-slate-900">Pesan Tukang Cukur ke Rumah</h2>
-                <p class="text-gray-500 text-sm mb-6">Isi formulir di bawah ini dengan lengkap untuk memesan layanan potong rambut.</p>
+                <p class="text-gray-500 text-sm mb-6">Isi formulir di bawah ini dengan lengkap untuk memesan layanan.</p>
                 
                 <form id="orderForm" onsubmit="submitOrder(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -53,7 +52,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Layanan & Harga</label>
                         <select id="serviceType" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none">
-                            <!-- Opsi dimuat otomatis dari Admin -->
+                            <!-- Diisi dinamis oleh JavaScript -->
                         </select>
                     </div>
                     <div>
@@ -62,7 +61,7 @@
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-gray-700 mb-1">Catatan / Deskripsi Tambahan</label>
-                        <textarea id="custDesc" rows="2" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Model rambut pilihan atau catatan khusus untuk barber..."></textarea>
+                        <textarea id="custDesc" rows="2" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-amber-500 outline-none" placeholder="Model rambut pilihan atau catatan khusus..."></textarea>
                     </div>
                     <div class="md:col-span-2 flex justify-end mt-2">
                         <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
@@ -72,18 +71,18 @@
                 </form>
             </div>
 
-            <!-- Status Pesanan & Riwayat Customer -->
+            <!-- Riwayat Pesanan Customer -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 class="text-lg font-bold text-slate-900 mb-4">Riwayat & Status Pesanan Anda</h3>
                 <div id="customerOrderList" class="space-y-3">
                     <p class="text-sm text-gray-400 italic">Belum ada pesanan aktif.</p>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- ================= SECTION ADMIN ================= -->
-        <div id="adminSection" class="hidden space-y-6">
-            <!-- Statistik & Kontrol Admin -->
+        <section id="adminSection" class="hidden space-y-6">
+            <!-- Statistik Ringkas -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
                     <div>
@@ -102,16 +101,16 @@
                 <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
                     <div>
                         <p class="text-sm text-gray-500 font-medium">Status Sistem</p>
-                        <h4 class="text-lg font-bold text-emerald-600">Admin Aktif</h4>
+                        <h4 class="text-lg font-bold text-emerald-600">Admin Terverifikasi</h4>
                     </div>
                     <div class="p-3 bg-emerald-100 text-emerald-600 rounded-xl text-xl"><i class="fa-solid fa-shield-halved"></i></div>
                 </div>
             </div>
 
-            <!-- Panel Pengaturan Toko & Keamanan Akun Admin (BARU) -->
+            <!-- Pengaturan Toko, Tampilan, & Akun Admin -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gear mr-2 text-amber-500"></i>Pengaturan Toko & Daftar Akun Admin</h3>
+                    <h3 class="text-lg font-bold text-slate-900"><i class="fa-solid fa-gear mr-2 text-amber-500"></i>Pengaturan Toko & Keamanan Akun</h3>
                     <button onclick="saveAdminSettings()" class="bg-slate-900 text-white text-sm px-4 py-2 rounded-xl hover:bg-slate-800 transition">Simpan Pengaturan</button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -138,25 +137,25 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar / Ubah Kata Sandi Khusus</label>
-                        <input type="password" id="settingAdminPass" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi baru admin">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar / Ganti Username Admin</label>
+                        <input type="text" id="settingAdminUser" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Username baru">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Daftar Akun Admin Baru (Username)</label>
-                        <input type="text" id="settingAdminUser" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Username admin">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Khusus / Kata Sandi Baru</label>
+                        <input type="password" id="settingAdminPass" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi khusus baru">
                     </div>
                 </div>
             </div>
 
-            <!-- Panel Pengaturan Daftar Harga Jasa Potong Rambut -->
+            <!-- Kelola Daftar & Harga Layanan -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
                 <h3 class="text-lg font-bold text-slate-900 mb-4"><i class="fa-solid fa-tags mr-2 text-amber-500"></i>Kelola Daftar & Harga Layanan</h3>
                 
-                <!-- Form Tambah Layanan Baru -->
+                <!-- Form Tambah Layanan -->
                 <form onsubmit="addServiceItem(event)" class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6 p-4 bg-gray-50 rounded-xl border">
                     <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Layanan / Barang</label>
-                        <input type="text" id="newServiceName" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500" placeholder="Contoh: Potong Rambut Premium">
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Nama Layanan</label>
+                        <input type="text" id="newServiceName" required class="w-full px-3 py-2 border rounded-lg text-sm bg-white outline-none focus:ring-2 focus:ring-amber-500" placeholder="Contoh: Potong Rambut VIP">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Harga (Rp)</label>
@@ -167,7 +166,6 @@
                     </div>
                 </form>
 
-                <!-- Tabel Daftar Harga Aktif -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-sm">
                         <thead>
@@ -178,7 +176,7 @@
                             </tr>
                         </thead>
                         <tbody id="priceListTable" class="divide-y divide-gray-100">
-                            <!-- Data dimuat lewat Javascript -->
+                            <!-- Diisi dinamis -->
                         </tbody>
                     </table>
                 </div>
@@ -196,27 +194,27 @@
                             <tr class="bg-gray-100 text-gray-600">
                                 <th class="p-3 rounded-l-xl">Waktu & Tanggal</th>
                                 <th class="p-3">Customer</th>
-                                <th class="p-3">Barang / Jasa</th>
+                                <th class="p-3">Jasa & Catatan</th>
                                 <th class="p-3">Alamat & WA</th>
                                 <th class="p-3">Total Pesanan</th>
                                 <th class="p-3">Status</th>
-                                <th class="p-3 rounded-r-xl text-center">Aksi / Kirim WA</th>
+                                <th class="p-3 rounded-r-xl text-center">Aksi / WA</th>
                             </tr>
                         </thead>
                         <tbody id="adminOrderTable" class="divide-y divide-gray-100">
-                            <!-- Data dimuat lewat Javascript -->
+                            <!-- Diisi dinamis -->
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
+        </section>
     </main>
 
-    <!-- MODAL LOGIN ADMIN -->
+    <!-- ================= MODAL LOGIN ADMIN ================= -->
     <div id="loginModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden flex justify-center items-center z-50 px-4">
         <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-sm">
-            <h3 class="text-lg font-bold text-slate-900 mb-2">Login Kata Sandi Khusus</h3>
-            <p class="text-xs text-gray-500 mb-4">Masukkan username dan kata sandi khusus admin untuk masuk.</p>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Login Admin Panel</h3>
+            <p class="text-xs text-gray-500 mb-4">Masukkan Username dan Kode Khusus / Kata Sandi Anda.</p>
             
             <div class="space-y-3 mb-4">
                 <div>
@@ -224,7 +222,7 @@
                     <input type="text" id="adminUserInput" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Username...">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-gray-700 mb-1">Kata Sandi Khusus</label>
+                    <label class="block text-xs font-medium text-gray-700 mb-1">Kode Khusus / Kata Sandi</label>
                     <input type="password" id="adminPasswordInput" class="w-full px-3 py-2 border rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-500" placeholder="Kata sandi...">
                 </div>
             </div>
@@ -236,9 +234,9 @@
         </div>
     </div>
 
-    <!-- SCRIPT LOGIKA UTAMA -->
+    <!-- ================= JAVASCRIPT UTAMA ================= -->
     <script>
-        // Inisialisasi Data dari LocalStorage atau Default
+        // State & LocalStorage Initialization
         let orders = JSON.parse(localStorage.getItem('cukurgo_orders')) || [];
         let settings = JSON.parse(localStorage.getItem('cukurgo_settings')) || {
             adminName: "CukurGo Official",
@@ -248,7 +246,6 @@
             adminUser: "admin",
             adminPass: "admin123"
         };
-
         let servicePrices = JSON.parse(localStorage.getItem('cukurgo_services')) || [
             { name: "Potong Rambut Dewasa", price: 45000 },
             { name: "Potong Rambut Anak", price: 35000 },
@@ -256,7 +253,6 @@
             { name: "Cukur Jenggot & Kumis", price: 25000 }
         ];
 
-        // Jalankan saat halaman dimuat
         window.onload = function() {
             loadSettingsToUI();
             renderCustomerServiceOptions();
@@ -264,7 +260,7 @@
             checkSessionState();
         };
 
-        // Ganti Tab Antara Customer dan Admin
+        // Navigasi Tab Utama
         function switchTab(role) {
             const custSec = document.getElementById('customerSection');
             const adminSec = document.getElementById('adminSection');
@@ -279,10 +275,9 @@
             }
         }
 
-        // Cek Keamanan Login Admin
+        // Keamanan & Sesi Login Admin
         function checkAdminAuth() {
-            const isAuth = sessionStorage.getItem('cukurgo_is_auth');
-            if(isAuth === 'true') {
+            if(sessionStorage.getItem('cukurgo_is_auth') === 'true') {
                 openAdminPanel();
             } else {
                 document.getElementById('loginModal').classList.remove('hidden');
@@ -296,16 +291,16 @@
         }
 
         function verifyAdminPassword() {
-            const user = document.getElementById('adminUserInput').value;
-            const pass = document.getElementById('adminPasswordInput').value;
+            const u = document.getElementById('adminUserInput').value;
+            const p = document.getElementById('adminPasswordInput').value;
             
-            if(user === settings.adminUser && pass === settings.adminPass) {
+            if(u === settings.adminUser && p === settings.adminPass) {
                 sessionStorage.setItem('cukurgo_is_auth', 'true');
                 closeLoginModal();
                 openAdminPanel();
                 checkSessionState();
             } else {
-                alert('Username atau Kata sandi khusus salah!');
+                alert('Username atau Kode Khusus / Kata Sandi Salah!');
             }
         }
 
@@ -313,13 +308,12 @@
             sessionStorage.removeItem('cukurgo_is_auth');
             switchTab('customer');
             checkSessionState();
-            alert('Anda telah berhasil Log Out.');
+            alert('Berhasil Log Out.');
         }
 
         function checkSessionState() {
-            const isAuth = sessionStorage.getItem('cukurgo_is_auth');
             const logoutBtn = document.getElementById('navLogoutBtn');
-            if(isAuth === 'true') {
+            if(sessionStorage.getItem('cukurgo_is_auth') === 'true') {
                 logoutBtn.classList.remove('hidden');
             } else {
                 logoutBtn.classList.add('hidden');
@@ -327,22 +321,17 @@
         }
 
         function openAdminPanel() {
-            const custSec = document.getElementById('customerSection');
-            const adminSec = document.getElementById('adminSection');
-            const custBtn = document.getElementById('navCustBtn');
-            const adminBtn = document.getElementById('navAdminBtn');
-
-            custSec.classList.add('hidden');
-            adminSec.classList.remove('hidden');
-            adminBtn.className = "px-3 py-1.5 rounded-lg bg-amber-500 text-slate-900 font-semibold text-sm transition";
-            custBtn.className = "px-3 py-1.5 rounded-lg bg-slate-800 text-gray-300 font-semibold text-sm hover:bg-slate-700 transition";
+            document.getElementById('customerSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('navAdminBtn').className = "px-3 py-1.5 rounded-lg bg-amber-500 text-slate-900 font-semibold text-sm transition";
+            document.getElementById('navCustBtn').className = "px-3 py-1.5 rounded-lg bg-slate-800 text-gray-300 font-semibold text-sm hover:bg-slate-700 transition";
             
             renderAdminDashboard();
             renderPriceManagementTable();
             loadSettingsToUI();
         }
 
-        // Kelola Background Website
+        // Pengaturan Tampilan & Profil Admin
         function changeBackground(colorClass) {
             document.getElementById('pageBody').className = `${colorClass} text-gray-800 font-sans transition-all duration-300`;
             settings.bgColor = colorClass;
@@ -353,8 +342,8 @@
             document.getElementById('settingAdminPhone').value = settings.adminPhone;
             document.getElementById('settingOngkir').value = settings.ongkir;
             document.getElementById('settingBgColor').value = settings.bgColor;
-            document.getElementById('settingAdminUser').value = settings.adminUser || "admin";
-            document.getElementById('settingAdminPass').value = settings.adminPass || "";
+            document.getElementById('settingAdminUser').value = settings.adminUser;
+            document.getElementById('settingAdminPass').value = settings.adminPass;
             document.getElementById('brandTitle').innerText = settings.adminName;
             changeBackground(settings.bgColor);
         }
@@ -372,29 +361,29 @@
             
             localStorage.setItem('cukurgo_settings', JSON.stringify(settings));
             document.getElementById('brandTitle').innerText = settings.adminName;
-            alert('Pengaturan toko & kredensial admin berhasil disimpan!');
+            alert('Pengaturan & Kredensial berhasil disimpan!');
             renderAdminDashboard();
         }
 
-        // --- FITUR MANAJEMEN HARGA OLEH ADMIN ---
+        // Manajemen Harga & Layanan
         function renderPriceManagementTable() {
             const tbody = document.getElementById('priceListTable');
             if(servicePrices.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-gray-400 italic">Belum ada daftar layanan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="3" class="p-3 text-center text-gray-400 italic">Belum ada layanan.</td></tr>`;
                 return;
             }
 
-            tbody.innerHTML = servicePrices.map((s, index) => `
+            tbody.innerHTML = servicePrices.map((s, idx) => `
                 <tr class="hover:bg-gray-50">
                     <td class="p-3 font-medium text-slate-900">
-                        <input type="text" value="${s.name}" id="editName-${index}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
+                        <input type="text" value="${s.name}" id="editName-${idx}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
                     </td>
                     <td class="p-3 font-bold text-slate-900">
-                        <input type="number" value="${s.price}" id="editPrice-${index}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
+                        <input type="number" value="${s.price}" id="editPrice-${idx}" class="border rounded px-2 py-1 text-sm w-full outline-none focus:ring-1 focus:ring-amber-500">
                     </td>
                     <td class="p-3 text-center space-x-2">
-                        <button onclick="updateServiceItem(${index})" title="Simpan Perubahan" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-save"></i></button>
-                        <button onclick="deleteServiceItem(${index})" title="Hapus Layanan" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="updateServiceItem(${idx})" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-save"></i></button>
+                        <button onclick="deleteServiceItem(${idx})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs transition"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -413,24 +402,24 @@
 
             renderPriceManagementTable();
             renderCustomerServiceOptions();
-            alert('Layanan dan harga baru berhasil ditambahkan!');
+            alert('Layanan berhasil ditambahkan!');
         }
 
-        function updateServiceItem(index) {
-            const name = document.getElementById(`editName-${index}`).value;
-            const price = parseInt(document.getElementById(`editPrice-${index}`).value);
+        function updateServiceItem(idx) {
+            const name = document.getElementById(`editName-${idx}`).value;
+            const price = parseInt(document.getElementById(`editPrice-${idx}`).value);
 
-            servicePrices[index] = { name, price };
+            servicePrices[idx] = { name, price };
             localStorage.setItem('cukurgo_services', JSON.stringify(servicePrices));
 
             renderPriceManagementTable();
             renderCustomerServiceOptions();
-            alert('Harga layanan berhasil diperbarui!');
+            alert('Harga diperbarui!');
         }
 
-        function deleteServiceItem(index) {
-            if(confirm('Yakin ingin menghapus layanan ini?')) {
-                servicePrices.splice(index, 1);
+        function deleteServiceItem(idx) {
+            if(confirm('Hapus layanan ini?')) {
+                servicePrices.splice(idx, 1);
                 localStorage.setItem('cukurgo_services', JSON.stringify(servicePrices));
                 renderPriceManagementTable();
                 renderCustomerServiceOptions();
@@ -440,7 +429,7 @@
         function renderCustomerServiceOptions() {
             const selectEl = document.getElementById('serviceType');
             if(servicePrices.length === 0) {
-                selectEl.innerHTML = `<option value="">-- Layanan Belum Tersedia --</option>`;
+                selectEl.innerHTML = `<option value="">-- Layanan Kosong --</option>`;
                 return;
             }
 
@@ -449,7 +438,7 @@
             `).join('');
         }
 
-        // Kirim Pesanan oleh Customer
+        // Transaksi & Pesanan Customer
         function submitOrder(e) {
             e.preventDefault();
             
@@ -463,21 +452,14 @@
             let servicePrice = matchedPrice ? parseInt(matchedPrice[1].replace(/\./g, '')) : 0;
             const total = servicePrice + settings.ongkir;
 
-            const now = new Date();
-            const timeString = now.toLocaleDateString('id-ID', {
-                day: '2-digit', month: 'long', year: 'numeric',
-                hour: '2-digit', minute: '2-digit'
+            const timeString = new Date().toLocaleDateString('id-ID', {
+                day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
             });
 
             const newOrder = {
                 id: 'ORD-' + Date.now(),
                 datetime: timeString,
-                name: name,
-                phone: phone,
-                item: serviceFull,
-                address: address,
-                desc: desc || '-',
-                total: total,
+                name, phone, item: serviceFull, address, desc: desc || '-', total,
                 status: 'Pesanan sudah diterima oleh admin'
             };
 
@@ -487,7 +469,7 @@
             document.getElementById('orderForm').reset();
             renderCustomerOrders();
             renderAdminDashboard();
-            alert('Pesanan berhasil dikirim ke Admin!');
+            alert('Pesanan berhasil dikirim!');
         }
 
         function renderCustomerOrders() {
@@ -515,13 +497,14 @@
             `).join('');
         }
 
+        // Dashboard Admin
         function renderAdminDashboard() {
             document.getElementById('statTotal').innerText = orders.length;
             document.getElementById('statOngkir').innerText = `Rp ${settings.ongkir.toLocaleString('id-ID')}`;
 
             const tbody = document.getElementById('adminOrderTable');
             if(orders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-400 italic">Belum ada data pesanan masuk.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-400 italic">Belum ada pesanan masuk.</td></tr>`;
                 return;
             }
 
@@ -534,14 +517,14 @@
                     <td class="p-3 font-bold text-slate-900">Rp ${o.total.toLocaleString('id-ID')}</td>
                     <td class="p-3">
                         <select onchange="updateOrderStatus(${index}, this.value)" class="text-xs border rounded-lg px-2 py-1 outline-none font-medium bg-amber-50 text-amber-800">
-                            <option value="Pesanan sudah diterima oleh admin" ${o.status === 'Pesanan sudah diterima oleh admin' ? 'selected' : ''}>Diterima Admin</option>
-                            <option value="Sedang di proses, mohon tunggu" ${o.status === 'Sedang di proses, mohon tunggu' ? 'selected' : ''}>Sedang Diproses</option>
-                            <option value="Pesanan selesai" ${o.status === 'Pesanan selesai' ? 'selected' : ''}>Selesai</option>
+                            <option value="Pesanan sudah diterima oleh admin" ${o.status === 'Pesanan sudah diterima oleh admin' ? 'selected' : ''}>Pesanan sudah diterima oleh admin</option>
+                            <option value="Sedang di proses, mohon tunggu" ${o.status === 'Sedang di proses, mohon tunggu' ? 'selected' : ''}>Sedang di proses, mohon tunggu</option>
+                            <option value="Pesanan selesai" ${o.status === 'Pesanan selesai' ? 'selected' : ''}>Pesanan selesai</option>
                         </select>
                     </td>
                     <td class="p-3 text-center space-x-1">
-                        <button onclick="sendWhatsApp(${index})" title="Kirim WA Otomatis" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg text-xs transition"><i class="fa-brands fa-whatsapp"></i></button>
-                        <button onclick="deleteOrder(${index})" title="Hapus Pesanan" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg text-xs transition"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="sendWhatsApp(${index})" title="Kirim WA" class="bg-emerald-500 hover:bg-emerald-600 text-white p-2 rounded-lg text-xs transition"><i class="fa-brands fa-whatsapp"></i></button>
+                        <button onclick="deleteOrder(${index})" title="Hapus" class="bg-red-500 hover:bg-red-600 text-white p-2 rounded-lg text-xs transition"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -556,15 +539,12 @@
         function sendWhatsApp(index) {
             const o = orders[index];
             let phoneFormatted = o.phone.replace(/^0/, '62');
-            
-            const message = `Halo Kak *${o.name}*,\n\nUpdate pesanan Anda di *${settings.adminName}*:\n\n*Layanan:* ${o.item}\n*Alamat:* ${o.address}\n*Total:* Rp ${o.total.toLocaleString('id-ID')}\n*Status:* *${o.status}*\n\nTerima kasih telah menggunakan jasa kami! 🙏`;
-            
-            const waUrl = `https://wa.me/${phoneFormatted}?text=${encodeURIComponent(message)}`;
-            window.open(waUrl, '_blank');
+            const message = `Halo Kak *${o.name}*,\n\nUpdate pesanan Anda di *${settings.adminName}*:\n\n*Layanan:* ${o.item}\n*Alamat:* ${o.address}\n*Total:* Rp ${o.total.toLocaleString('id-ID')}\n*Status:* *${o.status}*\n\nTerima kasih! 🙏`;
+            window.open(`https://wa.me/${phoneFormatted}?text=${encodeURIComponent(message)}`, '_blank');
         }
 
         function deleteOrder(index) {
-            if(confirm('Yakin ingin menghapus pesanan ini?')) {
+            if(confirm('Hapus pesanan ini?')) {
                 orders.splice(index, 1);
                 localStorage.setItem('cukurgo_orders', JSON.stringify(orders));
                 renderCustomerOrders();
