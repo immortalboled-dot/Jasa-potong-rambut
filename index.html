@@ -1,578 +1,557 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BarberGo - Jasa Potong Rambut Panggilan</title>
-    <!-- Tailwind CSS -->
+    <title>BarberExpress - Jasa Potong Rambut Panggilan</title>
+    <!-- Tailwind CSS untuk Desain Rapi & Modern -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome untuk Ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
-                extend: { colors: { primary: '#1e293b' } }
+                extend: {
+                    colors: {
+                        primary: 'var(--color-primary, #2563eb)',
+                        secondary: 'var(--color-secondary, #1e40af)',
+                    }
+                }
             }
         }
     </script>
 </head>
-<body class="h-full font-sans transition-colors duration-500" :style="backgroundStyle" x-data="barberApp()">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
 
-    <!-- NOTIFIKASI / TOAST POPUP -->
-    <div x-show="notification.show" x-transition.opacity class="fixed top-5 right-5 z-50 bg-gray-900 text-white px-6 py-3 rounded-xl shadow-xl flex items-center space-x-3 border border-gray-700">
-        <i :class="notification.icon" class="text-lg"></i>
-        <span class="text-sm font-medium" x-text="notification.message"></span>
-    </div>
+    <!-- HEADER / NAVBAR -->
+    <header id="main-header" class="bg-primary text-white shadow-md transition-colors duration-300">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-scissors text-2xl"></i>
+                <h1 class="text-xl font-bold tracking-wide">BarberExpress</h1>
+            </div>
+            <div class="space-x-3">
+                <button onclick="switchView('customer')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm transition font-medium">
+                    <i class="fa-solid fa-user mr-1"></i> Dashboard Customer
+                </button>
+                <button onclick="checkAdminAccess()" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm transition font-medium">
+                    <i class="fa-solid fa-lock mr-1"></i> Dashboard Admin
+                </button>
+            </div>
+        </div>
+    </header>
 
-    <!-- NAVBAR UTAMA -->
-    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-40 border-b border-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center space-x-3 cursor-pointer" @click="activeTab = 'customer'">
-                    <div class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shadow-md">
-                        <i class="fa-solid fa-scissors"></i>
+    <!-- KONTEN UTAMA -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- ================= VIEW: CUSTOMER DASHBOARD ================= -->
+        <section id="view-customer" class="space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-slate-700"><i class="fa-solid fa-calendar-plus text-primary mr-2"></i>Pesan Jasa Potong Rambut</h2>
+                    <div class="text-right">
+                        <span class="text-sm text-slate-500">Tarif Layanan Saat Ini:</span>
+                        <div id="display-price" class="text-lg font-bold text-primary">Rp 0</div>
                     </div>
-                    <span class="font-bold text-xl text-gray-900 tracking-tight" x-text="settings.serviceName || 'BarberGo'"></span>
                 </div>
-                <div class="flex items-center space-x-2 sm:space-x-4">
-                    <button @click="activeTab = 'customer'" :class="activeTab === 'customer' ? 'text-indigo-600 bg-indigo-50 border-indigo-200' : 'text-gray-600 hover:bg-gray-50'" class="px-3.5 py-2 rounded-xl font-medium text-sm transition border border-transparent">
-                        <i class="fa-solid fa-store mr-1.5"></i> Dashboard Customer
-                    </button>
-                    <button @click="checkAdminAccess" :class="activeTab.includes('admin') ? 'text-indigo-600 bg-indigo-50 border-indigo-200' : 'text-gray-600 hover:bg-gray-50'" class="px-3.5 py-2 rounded-xl font-medium text-sm transition border border-transparent">
-                        <i class="fa-solid fa-user-shield mr-1.5"></i> Admin Area
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
 
-    <!-- MAIN CONTAINER -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <!-- ================= DASHBOARD CUSTOMER ================= -->
-        <div x-show="activeTab === 'customer'" class="space-y-6">
-            <div class="bg-white/95 backdrop-blur shadow-xl rounded-3xl p-6 md:p-10 border border-white">
-                <div class="max-w-2xl mx-auto">
-                    <div class="text-center mb-8">
-                        <span class="bg-indigo-100 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Layanan Panggilan ke Rumah</span>
-                        <h1 class="text-3xl font-extrabold text-gray-900 mt-2" x-text="settings.serviceName"></h1>
-                        <p class="text-gray-500 mt-1 text-sm">Pesan barber profesional sekarang, nikmati kemudahan potong rambut tanpa harus keluar rumah.</p>
-                        
-                        <!-- Badge Harga Real-Time dari Admin -->
-                        <div class="mt-5 inline-flex items-center bg-gradient-to-r from-indigo-600 to-violet-600 text-white px-5 py-2.5 rounded-2xl shadow-md text-sm font-semibold space-x-2">
-                            <i class="fa-solid fa-tag"></i>
-                            <span>Tarif Jasa:</span>
-                            <span class="underline decoration-wavy font-bold" x-text="formatRupiah(settings.price)"></span>
-                        </div>
-                    </div>
-
-                    <!-- Form Pesanan Customer -->
-                    <form @submit.prevent="submitOrder" class="space-y-5">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Lengkap Costumer</label>
-                            <input type="text" x-model="orderForm.customerName" placeholder="Masukkan nama lengkap Anda" required class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">No. WhatsApp Costumer</label>
-                                <input type="tel" x-model="orderForm.customerPhone" placeholder="Contoh: 08123456789" required class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Barang / Model Potongan</label>
-                                <input type="text" x-model="orderForm.itemName" placeholder="Contoh: Undercut / Regular Haircut" required class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Alamat Lengkap (Lokasi Panggilan)</label>
-                            <textarea x-model="orderForm.address" rows="3" placeholder="Nama Jalan, No. Rumah, Patokan, RT/RW..." required class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Deskripsi Tambahan / Catatan Khusus</label>
-                            <textarea x-model="orderForm.description" rows="2" placeholder="Catatan opsional (misal: minta jam 2 siang...)" class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition"></textarea>
-                        </div>
-
-                        <!-- Kotak Rincian Total Harga -->
-                        <div class="bg-gray-50 p-5 rounded-2xl space-y-2 border border-gray-200">
-                            <div class="flex justify-between text-sm text-gray-600">
-                                <span>Harga Jasa Potong Rambut</span>
-                                <span class="font-semibold text-gray-800" x-text="formatRupiah(settings.price)"></span>
-                            </div>
-                            <div class="flex justify-between text-sm text-gray-600">
-                                <span>Ongkos Kirim / Transportasi</span>
-                                <span class="font-semibold text-gray-800" x-text="formatRupiah(settings.shippingCost)"></span>
-                            </div>
-                            <div class="border-t border-gray-200 pt-3 flex justify-between items-center font-bold text-base text-gray-900">
-                                <span>Total Pesanan (Pembayaran)</span>
-                                <span class="text-indigo-600 text-lg" x-text="formatRupiah(settings.price + settings.shippingCost)"></span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold py-3.5 px-6 rounded-xl hover:opacity-95 transition shadow-lg shadow-indigo-200 flex items-center justify-center space-x-2">
-                            <i class="fa-brands fa-whatsapp text-xl"></i>
-                            <span>Pesan Sekarang & Kirim ke WA Admin</span>
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= LOGIN ADMIN ================= -->
-        <div x-show="activeTab === 'admin-login'" class="max-w-md mx-auto mt-16 bg-white/95 backdrop-blur shadow-2xl rounded-3xl p-8 border border-gray-100">
-            <div class="text-center mb-8">
-                <div class="bg-indigo-50 text-indigo-600 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-sm">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-900">Login Administrator</h2>
-                <p class="text-sm text-gray-500 mt-1">Masukkan kredensial admin yang terdaftar</p>
-            </div>
-            <form @submit.prevent="adminLogin" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Admin</label>
-                    <input type="text" x-model="loginInput.name" placeholder="Nama admin terdaftar" required class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Kata Sandi Admin</label>
-                    <input type="password" x-model="loginInput.password" placeholder="••••••••" required class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 outline-none">
-                </div>
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-1">Kode Khusus Admin</label>
-                    <input type="text" x-model="loginInput.code" placeholder="Kode keamanan khusus" required class="w-full rounded-xl border border-gray-300 px-4 py-3 shadow-sm focus:border-indigo-500 outline-none">
-                </div>
-                <button type="submit" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition shadow-md shadow-indigo-100">Masuk Dashboard Admin</button>
-                <button type="button" @click="activeTab = 'customer'" class="w-full text-center text-sm text-gray-500 hover:text-gray-700 mt-2 block">Kembali ke Beranda</button>
-            </form>
-        </div>
-
-        <!-- ================= DASHBOARD ADMIN UTAMA ================= -->
-        <div x-show="activeTab === 'admin-dashboard'" class="space-y-6">
-            <!-- Header Panel Admin & Tombol Logout -->
-            <div class="bg-white/90 backdrop-blur p-4 sm:p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-indigo-600 text-white p-3 rounded-xl">
-                        <i class="fa-solid fa-user-gear text-xl"></i>
+                <form id="order-form" onsubmit="submitOrder(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Nama Lengkap</label>
+                        <input type="text" id="cust-name" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none">
                     </div>
                     <div>
-                        <h2 class="text-xl font-bold text-gray-900">Panel Kontrol Admin</h2>
-                        <p class="text-xs text-gray-500">Masuk sebagai: <span class="font-semibold text-indigo-600" x-text="currentAdminName"></span></p>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Nomor WhatsApp</label>
+                        <input type="tel" id="cust-wa" placeholder="Contoh: 628123456789" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Alamat Lengkap</label>
+                        <textarea id="cust-address" rows="2" placeholder="Jalan, No Rumah, Patokan..." required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Deskripsi / Model Rambut Pilihan</label>
+                        <textarea id="cust-desc" rows="2" placeholder="Contoh: Model Undercut rapi, untuk anak umur 7 tahun..." class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
+                            <i class="fa-brands fa-whatsapp mr-2 text-lg"></i> Pesan Sekarang & Kirim ke WhatsApp Admin
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tracking Pesanan Customer -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <h3 class="text-lg font-bold text-slate-700 mb-4"><i class="fa-solid fa-clock-rotate-left text-primary mr-2"></i>Status & Riwayat Pesanan Anda</h3>
+                <div id="customer-order-status" class="space-y-3">
+                    <p class="text-sm text-slate-400 italic">Belum ada pesanan aktif hari ini.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VIEW: LOGIN ADMIN ================= -->
+        <section id="view-admin-login" class="hidden max-w-md mx-auto bg-white p-8 rounded-2xl shadow-sm border border-slate-100 mt-10">
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-shield-halved text-4xl text-primary mb-2"></i>
+                <h2 class="text-2xl font-bold text-slate-700">Login Admin</h2>
+                <p class="text-sm text-slate-400">Masukkan kredensial admin yang terdaftar</p>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Nama Admin</label>
+                    <input type="text" id="login-user" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Kata Sandi</label>
+                    <input type="password" id="login-pass" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-semibold py-2.5 rounded-xl transition">Masuk Dashboard</button>
+                <button type="button" onclick="switchView('customer')" class="w-full text-sm text-slate-500 hover:underline mt-2">Kembali ke Beranda</button>
+            </form>
+        </section>
+
+        <!-- ================= VIEW: DASHBOARD ADMIN ================= -->
+        <section id="view-admin-dashboard" class="hidden space-y-6">
+            <!-- Navigasi Admin & Logout -->
+            <div class="flex justify-between items-center bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-primary/10 p-2.5 rounded-xl text-primary"><i class="fa-solid fa-user-shield text-xl"></i></div>
+                    <div>
+                        <h3 class="font-bold text-slate-700" id="admin-logged-name">Administrator</h3>
+                        <p class="text-xs text-slate-400">Panel Kontrol Utama</p>
                     </div>
                 </div>
-                <button @click="adminLogout" class="bg-red-50 text-red-600 hover:bg-red-100 font-semibold px-4 py-2.5 rounded-xl text-sm transition flex items-center space-x-2 border border-red-200">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    <span>Logout Admin</span>
+                <button onclick="adminLogout()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-4 py-2 rounded-xl text-sm font-semibold transition">
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
                 </button>
             </div>
 
-            <!-- Sub Navigation Tabs Admin -->
-            <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-3">
-                <button @click="adminSubTab = 'orders'" :class="adminSubTab === 'orders' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'" class="px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    Kelola Pesanan (<span x-text="orders.length"></span>)
-                </button>
-                <button @click="adminSubTab = 'settings'" :class="adminSubTab === 'settings' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'" class="px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    Pengaturan Jasa & Background
-                </button>
-                <button @click="adminSubTab = 'admins'" :class="adminSubTab === 'admins' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'" class="px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    Daftar Admin (<span x-text="adminList.length"></span>)
-                </button>
-                <button @click="adminSubTab = 'history'" :class="adminSubTab === 'history' ? 'bg-indigo-600 text-white shadow-md' : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'" class="px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    History / Riwayat Selesai
-                </button>
-            </div>
-
-            <!-- 1. TAB: KELOLA PESANAN -->
-            <div x-show="adminSubTab === 'orders'" class="space-y-4">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-bold text-gray-900">Daftar Pesanan Aktif Customer</h3>
+            <!-- Statistik Singkat -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center space-x-4">
+                    <div class="bg-blue-50 text-blue-600 p-3 rounded-xl"><i class="fa-solid fa-list-check text-xl"></i></div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium">Total Pesanan</p>
+                        <h4 id="stat-total" class="text-xl font-bold text-slate-700">0</h4>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 gap-4">
-                    <template x-for="order in activeOrders" :key="order.id">
-                        <div class="bg-white/95 backdrop-blur p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-100 pb-3 gap-2">
-                                <div>
-                                    <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full"><i class="fa-regular fa-clock mr-1"></i> <span x-text="order.timestamp"></span></span>
-                                    <h4 class="font-bold text-lg text-gray-900 mt-1" x-text="order.customerName"></h4>
-                                </div>
-                                <span class="px-3 py-1 rounded-full text-xs font-bold"
-                                    :class="{
-                                        'bg-amber-100 text-amber-800': order.status === 'Pesanan Diterima',
-                                        'bg-blue-100 text-blue-800': order.status === 'Sedang di proses, mohon tunggu',
-                                        'bg-emerald-100 text-emerald-800': order.status === 'Pesanan Selesai'
-                                    }" x-text="order.status"></span>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                <div class="space-y-1">
-                                    <p class="text-gray-400 text-xs uppercase font-bold">Detail Barang / Layanan:</p>
-                                    <p class="font-semibold text-gray-800" x-text="order.itemName"></p>
-                                    <p class="text-gray-400 text-xs uppercase font-bold mt-2">No WhatsApp Costumer:</p>
-                                    <p class="font-semibold text-indigo-600" x-text="order.customerPhone"></p>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-gray-400 text-xs uppercase font-bold">Alamat Lengkap:</p>
-                                    <p class="font-semibold text-gray-800" x-text="order.address"></p>
-                                    <p class="text-gray-400 text-xs uppercase font-bold mt-2">Deskripsi / Catatan:</p>
-                                    <p class="font-semibold text-gray-800" x-text="order.description || '-'"></p>
-                                </div>
-                            </div>
-
-                            <div class="bg-gray-50 p-3.5 rounded-xl flex justify-between items-center text-sm border border-gray-200">
-                                <span class="font-semibold text-gray-700">Total Pesanan:</span>
-                                <span class="font-extrabold text-indigo-600 text-base" x-text="formatRupiah(order.totalAmount)"></span>
-                            </div>
-
-                            <!-- Tombol Aksi Status & WA ke Customer -->
-                            <div class="flex flex-wrap gap-2 pt-2 border-t border-gray-100 items-center">
-                                <button @click="updateOrderStatus(order, 'Pesanan Diterima')" class="bg-amber-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-amber-600 transition shadow-sm">Pesanan Diterima</button>
-                                <button @click="updateOrderStatus(order, 'Sedang di proses, mohon tunggu')" class="bg-blue-600 text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-blue-700 transition shadow-sm">Sedang Diproses</button>
-                                <button @click="updateOrderStatus(order, 'Pesanan Selesai')" class="bg-emerald-600 text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-emerald-700 transition shadow-sm">Selesaikan Pesanan</button>
-                                <a :href="getWhatsAppCustomerLink(order)" target="_blank" class="bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold hover:bg-emerald-600 transition shadow-sm flex items-center"><i class="fa-brands fa-whatsapp mr-1.5 text-sm"></i> WhatsApp Costumer</a>
-                                <button @click="deleteOrder(order.id)" class="ml-auto bg-red-50 text-red-600 hover:bg-red-100 px-3 py-2 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
-                            </div>
-                        </div>
-                    </template>
-                    <div x-show="activeOrders.length === 0" class="text-center bg-white/50 py-12 rounded-2xl border border-dashed border-gray-300">
-                        <i class="fa-solid fa-inbox text-4xl text-gray-300 mb-2"></i>
-                        <p class="text-gray-500 text-sm">Belum ada pesanan aktif saat ini.</p>
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center space-x-4">
+                    <div class="bg-amber-50 text-amber-600 p-3 rounded-xl"><i class="fa-solid fa-spinner text-xl"></i></div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium">Sedang Diproses</p>
+                        <h4 id="stat-process" class="text-xl font-bold text-slate-700">0</h4>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm flex items-center space-x-4">
+                    <div class="bg-emerald-50 text-emerald-600 p-3 rounded-xl"><i class="fa-solid fa-circle-check text-xl"></i></div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium">Pesanan Selesai</p>
+                        <h4 id="stat-done" class="text-xl font-bold text-slate-700">0</h4>
                     </div>
                 </div>
             </div>
 
-            <!-- 2. TAB: PENGATURAN JASA & BACKGROUND -->
-            <div x-show="adminSubTab === 'settings'" class="bg-white/95 backdrop-blur p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 max-w-3xl mx-auto space-y-6">
-                <h3 class="text-xl font-bold text-gray-900 border-b pb-3">Pengaturan Jasa & Tampilan Website</h3>
-                <div class="space-y-4">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Jasa (Admin)</label>
-                            <input type="text" x-model="settings.serviceName" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 shadow-sm focus:border-indigo-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">No WhatsApp Admin (Penerima Pesanan)</label>
-                            <input type="text" x-model="settings.adminPhone" placeholder="62812345xxxx" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 shadow-sm focus:border-indigo-500 outline-none">
-                        </div>
-                    </div>
+            <!-- Tab Navigasi Fitur Admin -->
+            <div class="flex space-x-2 border-b border-slate-200 pb-2 overflow-x-auto">
+                <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold transition whitespace-nowrap">Kelola Pesanan</button>
+                <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap">Pengaturan Jasa & Harga</button>
+                <button onclick="switchAdminTab('admins')" id="tab-btn-admins" class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap">Daftar Admin & Kode Khusus</button>
+            </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Harga Potong Rambut (Rp)</label>
-                            <input type="number" x-model.number="settings.price" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 shadow-sm focus:border-indigo-500 outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-1">Setting Ongkir / Transport (Rp)</label>
-                            <input type="number" x-model.number="settings.shippingCost" class="w-full rounded-xl border border-gray-300 px-4 py-2.5 shadow-sm focus:border-indigo-500 outline-none">
-                        </div>
-                    </div>
-
-                    <!-- Fitur Pengaturan Background Otomatis & Banyak Pilihan -->
-                    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 space-y-3">
-                        <label class="block text-sm font-bold text-gray-800">Pengaturan Background Warna / Tema Website</label>
-                        <div class="flex flex-wrap gap-3 items-center">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-xs text-gray-500 font-semibold">Custom Picker:</span>
-                                <input type="color" x-model="settings.bgColor" class="w-10 h-10 rounded-xl border cursor-pointer">
-                            </div>
-                            <button @click="settings.bgColor = '#f8fafc'" class="px-3 py-1.5 bg-slate-100 rounded-lg text-xs font-bold border border-slate-300">Clean Slate</button>
-                            <button @click="settings.bgColor = '#fef2f2'" class="px-3 py-1.5 bg-red-100 rounded-lg text-xs font-bold border border-red-300">Soft Red</button>
-                            <button @click="settings.bgColor = '#f0fdf4'" class="px-3 py-1.5 bg-emerald-100 rounded-lg text-xs font-bold border border-emerald-300">Soft Green</button>
-                            <button @click="settings.bgColor = '#eff6ff'" class="px-3 py-1.5 bg-blue-100 rounded-lg text-xs font-bold border border-blue-300">Soft Blue</button>
-                            <button @click="settings.bgColor = '#fefce8'" class="px-3 py-1.5 bg-yellow-100 rounded-lg text-xs font-bold border border-yellow-300">Soft Yellow</button>
-                            <button @click="settings.bgColor = '#faf5ff'" class="px-3 py-1.5 bg-purple-100 rounded-lg text-xs font-bold border border-purple-300">Soft Purple</button>
-                            <button @click="randomizeBackground" class="px-3 py-1.5 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-sm"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Random Otomatis</button>
-                        </div>
-                    </div>
-
-                    <button @click="saveSettings" class="w-full bg-indigo-600 text-white font-bold py-3.5 rounded-xl hover:bg-indigo-700 transition shadow-md shadow-indigo-100">Simpan Perubahan Pengaturan</button>
+            <!-- TAB 1: KELOLA PESANAN & HISTORY -->
+            <div id="admin-tab-orders" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                <h3 class="font-bold text-slate-700 text-lg">Daftar Pesanan Masuk & Riwayat</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b text-xs uppercase text-slate-400 font-semibold bg-slate-50">
+                                <th class="p-3">Waktu / Tanggal</th>
+                                <th class="p-3">Customer & WA</th>
+                                <th class="p-3">Alamat & Deskripsi</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-center">Aksi / Kirim WA Otomatis</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-orders-table" class="text-sm">
+                            <!-- Data Pesanan Masuk Disini -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <!-- 3. TAB: DAFTAR ADMIN -->
-            <div x-show="adminSubTab === 'admins'" class="space-y-6 max-w-3xl mx-auto">
-                <div class="bg-white/95 backdrop-blur p-6 rounded-3xl shadow-sm border border-gray-100 space-y-4">
-                    <h3 class="text-xl font-bold text-gray-900">Tambah Admin Baru</h3>
-                    <form @submit.prevent="addNewAdmin" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <input type="text" x-model="newAdminForm.name" placeholder="Nama Admin" required class="rounded-xl border border-gray-300 px-4 py-2.5 text-sm outline-none">
-                        <input type="password" x-model="newAdminForm.password" placeholder="Kata Sandi" required class="rounded-xl border border-gray-300 px-4 py-2.5 text-sm outline-none">
-                        <input type="text" x-model="newAdminForm.code" placeholder="Kode Khusus" required class="rounded-xl border border-gray-300 px-4 py-2.5 text-sm outline-none">
-                        <button type="submit" class="sm:col-span-3 bg-indigo-600 text-white font-bold py-2.5 rounded-xl text-sm hover:bg-indigo-700 transition shadow-sm">Tambah Admin ke Daftar</button>
-                    </form>
-                </div>
-
-                <div class="bg-white/95 backdrop-blur p-6 rounded-3xl shadow-sm border border-gray-100 space-y-4">
-                    <h3 class="text-xl font-bold text-gray-900">Daftar Akun Admin Terdaftar</h3>
-                    <div class="space-y-3">
-                        <template x-for="adm in adminList" :key="adm.id">
-                            <div class="p-4 rounded-xl border border-gray-200 flex justify-between items-center bg-gray-50/50">
-                                <div>
-                                    <p class="font-bold text-gray-800" x-text="adm.name"></p>
-                                    <p class="text-xs text-gray-500">Kode Khusus: <span class="font-mono bg-gray-200 px-1.5 py-0.5 rounded text-gray-700" x-text="adm.code"></span></p>
-                                </div>
-                                <button @click="deleteAdmin(adm.id)" class="text-red-500 hover:text-red-700 text-xs font-bold px-3 py-1.5 bg-red-50 rounded-lg border border-red-200"><i class="fa-solid fa-trash mr-1"></i> Hapus</button>
-                            </div>
-                        </template>
+            <!-- TAB 2: PENGATURAN HARGA & TEMA WARNA OTOMATIS -->
+            <div id="admin-tab-settings" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                <h3 class="font-bold text-slate-700 text-lg">Pengaturan Tarif & Tema Aplikasi</h3>
+                <form onsubmit="saveSettings(event)" class="space-y-4 max-w-lg">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Harga Potong Rambut (Rp)</label>
+                        <input type="number" id="setting-price" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
                     </div>
-                </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">No WhatsApp Admin (Penerima Notifikasi)</label>
+                        <input type="text" id="setting-admin-wa" placeholder="628xxxxxxxxxx" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Pilih Tema Warna Otomatis</label>
+                        <select id="setting-theme" class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
+                            <option value="blue">Biru Elegan (Default)</option>
+                            <option value="emerald">Hijau Emerald</option>
+                            <option value="indigo">Indigo Modern</option>
+                            <option value="rose">Merah Rose</option>
+                            <option value="amber">Amber Gold</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="bg-primary text-white font-semibold px-6 py-2.5 rounded-xl transition hover:opacity-90">Simpan Perubahan</button>
+                </form>
             </div>
 
-            <!-- 4. TAB: HISTORY / RIWAYAT SELESAI -->
-            <div x-show="adminSubTab === 'history'" class="space-y-4 max-w-4xl mx-auto">
-                <h3 class="text-xl font-bold text-gray-900">Riwayat Pesanan Selesai (History)</h3>
-                <div class="space-y-3">
-                    <template x-for="order in historyOrders" :key="order.id">
-                        <div class="bg-white/95 backdrop-blur p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                            <div>
-                                <div class="flex items-center space-x-2">
-                                    <span class="font-bold text-gray-900 text-base" x-text="order.customerName"></span>
-                                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-0.5 rounded-full">Selesai</span>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1"><i class="fa-regular fa-clock mr-1"></i> <span x-text="order.timestamp"></span> | Layanan: <strong class="text-gray-700" x-text="order.itemName"></strong></p>
-                            </div>
-                            <div class="flex items-center space-x-4 w-full sm:w-auto justify-between sm:justify-end">
-                                <span class="font-extrabold text-indigo-600 text-base" x-text="formatRupiah(order.totalAmount)"></span>
-                                <button @click="deleteOrder(order.id)" class="bg-red-50 text-red-600 hover:bg-red-100 px-3 py-1.5 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </div>
-                    </template>
-                    <div x-show="historyOrders.length === 0" class="text-center bg-white/50 py-12 rounded-2xl border border-dashed border-gray-300">
-                        <i class="fa-solid fa-clock-rotate-left text-4xl text-gray-300 mb-2"></i>
-                        <p class="text-gray-500 text-sm">Belum ada riwayat pesanan selesai.</p>
+            <!-- TAB 3: DAFTAR ADMIN & KODE KHUSUS -->
+            <div id="admin-tab-admins" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                <h3 class="font-bold text-slate-700 text-lg">Tambah Admin Baru & Kode Khusus Verifikasi</h3>
+                <form onsubmit="addNewAdmin(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Nama Admin</label>
+                        <input type="text" id="new-adm-name" required class="w-full px-4 py-2 border rounded-xl outline-none">
                     </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Kata Sandi</label>
+                        <input type="password" id="new-adm-pass" required class="w-full px-4 py-2 border rounded-xl outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Kode Khusus Pendaftaran</label>
+                        <input type="password" id="new-adm-code" placeholder="Kode Rahasia" required class="w-full px-4 py-2 border rounded-xl outline-none">
+                    </div>
+                    <div>
+                        <button type="submit" class="w-full bg-primary text-white font-semibold py-2 rounded-xl transition">Tambah Admin</button>
+                    </div>
+                </form>
+                <div class="mt-6">
+                    <h4 class="font-semibold text-slate-600 mb-2">Daftar Admin Terdaftar</h4>
+                    <ul id="admin-list-container" class="divide-y divide-slate-100 border rounded-xl p-2">
+                        <!-- List Admin -->
+                    </ul>
                 </div>
             </div>
-        </div>
+        </section>
+
     </main>
 
-    <!-- Firebase SDK v10 (Modular) -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <!-- MODAL NOTIFIKASI SIMPAN PERUBAHAN -->
+    <div id="notification-modal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 rounded-2xl max-w-sm w-full text-center space-y-4 shadow-xl">
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-700" id="notif-title">Berhasil!</h3>
+            <p id="notif-message" class="text-sm text-slate-500">Perubahan pengaturan telah berhasil disimpan secara otomatis.</p>
+            <button onclick="closeNotificationModal()" class="w-full bg-primary text-white py-2 rounded-xl font-semibold">OK</button>
+        </div>
+    </div>
 
-        // Konfigurasi Firebase Anda
-        const firebaseConfig = {
-            apiKey: "API_KEY_ANDA",
-            authDomain: "PROJECT_ID.firebaseapp.com",
-            projectId: "PROJECT_ID",
-            storageBucket: "PROJECT_ID.appspot.com",
-            messagingSenderId: "SENDER_ID",
-            appId: "APP_ID"
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
+        &copy; 2026 BarberExpress. Solusi Potong Rambut Panggilan Langsung ke Rumah Anda.
+    </footer>
+
+    <!-- SCRIPT APLIKASI & LOGIKA -->
+    <script>
+        // Database Lokal Inisialisasi (Bisa dihubungkan ke Firebase)
+        let appData = JSON.parse(localStorage.getItem('barberAppData')) || {
+            price: 50000,
+            adminWa: "6281234567890",
+            theme: "blue",
+            admins: [
+                { name: "SuperAdmin", pass: "admin123", code: "BARBER2026" }
+            ],
+            orders: []
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const SECRET_REGISTRATION_CODE = "BARBER2026"; // Kata code khusus untuk daftar admin
 
-        window.db = db;
-        window.firebaseRefs = { collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc };
-        window.dispatchEvent(new CustomEvent('firebase-ready'));
-    </script>
+        // Theme mapping color variables
+        const themes = {
+            blue: { primary: '#2563eb', secondary: '#1e40af' },
+            emerald: { primary: '#059669', secondary: '#047857' },
+            indigo: { primary: '#4f46e5', secondary: '#4338ca' },
+            rose: { primary: '#e11d48', secondary: '#be123c' },
+            amber: { primary: '#d97706', secondary: '#b45309' }
+        };
 
-    <!-- Aplikasi Logika (Alpine.js) -->
-    <script>
-        function barberApp() {
-            return {
-                activeTab: 'customer',
-                adminSubTab: 'orders',
-                currentAdminName: '',
-                notification: { show: false, message: '', icon: 'fa-solid fa-check' },
-                settings: {
-                    serviceName: 'BarberGo Home Service',
-                    adminPhone: '6281234567890',
-                    price: 50000,
-                    shippingCost: 15000,
-                    bgColor: '#f8fafc'
-                },
-                loginInput: { name: '', password: '', code: '' },
-                newAdminForm: { name: '', password: '', code: '' },
-                orderForm: {
-                    customerName: '',
-                    customerPhone: '',
-                    itemName: '',
-                    address: '',
-                    description: ''
-                },
-                orders: [],
-                adminList: [],
+        function saveData() {
+            localStorage.setItem('barberAppData', JSON.stringify(appData));
+            applyTheme(appData.theme);
+        }
 
-                init() {
-                    window.addEventListener('firebase-ready', () => {
-                        this.loadSettings();
-                        this.loadOrders();
-                        this.loadAdmins();
-                    });
-                },
+        function applyTheme(themeName) {
+            const theme = themes[themeName] || themes.blue;
+            document.documentElement.style.setProperty('--color-primary', theme.primary);
+            document.documentElement.style.setProperty('--color-secondary', theme.secondary);
+            const header = document.getElementById('main-header');
+            header.className = `text-white shadow-md transition-colors duration-300`;
+            header.style.backgroundColor = theme.primary;
+        }
 
-                showNotification(msg, icon = 'fa-solid fa-check-circle') {
-                    this.notification = { show: true, message: msg, icon: icon };
-                    setTimeout(() => { this.notification.show = false; }, 3500);
-                },
+        // Inisialisasi Awal Halaman
+        window.onload = function() {
+            applyTheme(appData.theme);
+            document.getElementById('setting-price').value = appData.price;
+            document.getElementById('setting-admin-wa').value = appData.adminWa;
+            document.getElementById('setting-theme').value = appData.theme;
+            document.getElementById('display-price').innerText = formatRupiah(appData.price);
+            renderCustomerOrders();
+            renderAdminList();
+        }
 
-                formatRupiah(number) {
-                    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number || 0);
-                },
+        // Navigasi Tampilan Utama
+        function switchView(view) {
+            document.getElementById('view-customer').classList.add('hidden');
+            document.getElementById('view-admin-login').classList.add('hidden');
+            document.getElementById('view-admin-dashboard').classList.add('hidden');
 
-                get backgroundStyle() {
-                    return `background-color: ${this.settings.bgColor};`;
-                },
-
-                randomizeBackground() {
-                    const colors = ['#f8fafc', '#fef2f2', '#f0fdf4', '#eff6ff', '#fefce8', '#faf5ff', '#ecfeff', '#fff7ed'];
-                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                    this.settings.bgColor = randomColor;
-                    this.showNotification('Background berhasil diubah secara otomatis!', 'fa-solid fa-wand-magic-sparkles');
-                },
-
-                checkAdminAccess() {
-                    this.activeTab = 'admin-login';
-                },
-
-                async loadSettings() {
-                    try {
-                        const docSnap = await window.firebaseRefs.getDoc(window.firebaseRefs.doc(window.db, 'config', 'settings'));
-                        if (docSnap.exists()) {
-                            this.settings = docSnap.data();
-                        }
-                    } catch(e) { console.log('Menggunakan pengaturan default'); }
-                },
-
-                async saveSettings() {
-                    try {
-                        await window.firebaseRefs.setDoc(window.firebaseRefs.doc(window.db, 'config', 'settings'), this.settings);
-                        this.showNotification('Pengaturan berhasil disimpan!', 'fa-solid fa-floppy-disk');
-                    } catch(e) { 
-                        this.showNotification('Gagal menyimpan pengaturan: ' + e.message, 'fa-solid fa-triangle-exclamation'); 
-                    }
-                },
-
-                async loadAdmins() {
-                    try {
-                        const querySnapshot = await window.firebaseRefs.getDocs(window.firebaseRefs.collection(window.db, 'admins'));
-                        this.adminList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                        // Jika belum ada admin sama sekali, buat default admin utama
-                        if (this.adminList.length === 0) {
-                            const defaultAdmin = { name: 'Admin Utama', password: '123', code: 'ADMIN01' };
-                            await window.firebaseRefs.addDoc(window.firebaseRefs.collection(window.db, 'admins'), defaultAdmin);
-                            this.loadAdmins();
-                        }
-                    } catch(e) { console.log('Gagal memuat admin'); }
-                },
-
-                async addNewAdmin() {
-                    try {
-                        await window.firebaseRefs.addDoc(window.firebaseRefs.collection(window.db, 'admins'), this.newAdminForm);
-                        this.showNotification('Admin baru berhasil ditambahkan!');
-                        this.newAdminForm = { name: '', password: '', code: '' };
-                        this.loadAdmins();
-                    } catch(e) {
-                        this.showNotification('Gagal menambah admin: ' + e.message, 'fa-solid fa-triangle-exclamation');
-                    }
-                },
-
-                async deleteAdmin(id) {
-                    if (this.adminList.length <= 1) {
-                        alert('Minimal harus ada 1 admin tersisa!');
-                        return;
-                    }
-                    if (confirm('Hapus admin ini dari daftar?')) {
-                        try {
-                            await window.firebaseRefs.deleteDoc(window.firebaseRefs.doc(window.db, 'admins', id));
-                            this.adminList = this.adminList.filter(a => a.id !== id);
-                            this.showNotification('Admin berhasil dihapus');
-                        } catch(e) { alert('Gagal menghapus'); }
-                    }
-                },
-
-                async adminLogin() {
-                    const found = this.adminList.find(a => a.name === this.loginInput.name && a.password === this.loginInput.password && a.code === this.loginInput.code);
-                    if (found) {
-                        this.currentAdminName = found.name;
-                        this.activeTab = 'admin-dashboard';
-                        this.loginInput = { name: '', password: '', code: '' };
-                        this.showNotification('Berhasil masuk ke Dashboard Admin!');
-                    } else {
-                        alert('Nama Admin, Kata Sandi, atau Kode Khusus salah!');
-                    }
-                },
-
-                adminLogout() {
-                    this.currentAdminName = '';
-                    this.activeTab = 'customer';
-                    this.showNotification('Berhasil logout dari sistem admin.');
-                },
-
-                async submitOrder() {
-                    // Waktu lengkap: Hari, Tanggal, Bulan, Tahun, Jam
-                    const now = new Date();
-                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-                    const timestamp = now.toLocaleDateString('id-ID', options);
-                    const totalAmount = Number(this.settings.price) + Number(this.settings.shippingCost);
-
-                    const newOrder = {
-                        ...this.orderForm,
-                        totalAmount,
-                        status: 'Pesanan Diterima',
-                        timestamp,
-                        createdAt: Date.now()
-                    };
-
-                    try {
-                        await window.firebaseRefs.addDoc(window.firebaseRefs.collection(window.db, 'orders'), newOrder);
-                        
-                        // Kirim Pesan WhatsApp Otomatis Langsung ke WA Admin
-                        const adminMsg = `Halo Admin *${this.settings.serviceName}*,\n\nAda pesanan baru masuk! ✂️\n\n- Nama Costumer: *${newOrder.customerName}*\n- No WA Costumer: ${newOrder.customerPhone}\n- Layanan / Barang: ${newOrder.itemName}\n- Alamat Lengkap: ${newOrder.address}\n- Deskripsi: ${newOrder.description || '-'}\n- Total Pembayaran: *${this.formatRupiah(totalAmount)}*\n\nMohon segera diproses ya!`;
-                        window.open(`https://wa.me/${this.settings.adminPhone}?text=${encodeURIComponent(adminMsg)}`, '_blank');
-
-                        this.showNotification('Pesanan berhasil dikirim & diteruskan ke WA Admin!');
-                        this.orderForm = { customerName: '', customerPhone: '', itemName: '', address: '', description: '' };
-                        this.loadOrders();
-                    } catch(e) {
-                        alert('Gagal mengirim pesanan: ' + e.message);
-                    }
-                },
-
-                async loadOrders() {
-                    try {
-                        const querySnapshot = await window.firebaseRefs.getDocs(window.firebaseRefs.collection(window.db, 'orders'));
-                        this.orders = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    } catch(e) { console.log('Gagal memuat pesanan'); }
-                },
-
-                async updateOrderStatus(order, newStatus) {
-                    try {
-                        await window.firebaseRefs.updateDoc(window.firebaseRefs.doc(window.db, 'orders', order.id), { status: newStatus });
-                        order.status = newStatus;
-                        
-                        // Kirim Pesan WhatsApp Otomatis ke Costumer Berdasarkan Status Terbaru
-                        let waText = `Halo Kak *${order.customerName}*,\n\nPesanan potong rambut Anda (*${order.itemName}*) saat ini statusnya:\n👉 *${newStatus}*\n\nTerima kasih telah menggunakan jasa kami!`;
-                        window.open(`https://wa.me/${order.customerPhone}?text=${encodeURIComponent(waText)}`, '_blank');
-                        
-                        this.showNotification(`Status diubah menjadi: "${newStatus}"`);
-                    } catch(e) {
-                        alert('Gagal memperbarui status pesanan');
-                    }
-                },
-
-                async deleteOrder(id) {
-                    if (confirm('Yakin ingin menghapus data pesanan ini?')) {
-                        try {
-                            await window.firebaseRefs.deleteDoc(window.firebaseRefs.doc(window.db, 'orders', id));
-                            this.orders = this.orders.filter(o => o.id !== id);
-                            this.showNotification('Data berhasil dihapus');
-                        } catch(e) { alert('Gagal menghapus'); }
-                    }
-                },
-
-                getWhatsAppCustomerLink(order) {
-                    return `https://wa.me/${order.customerPhone}?text=${encodeURIComponent('Halo Kak ' + order.customerName + ', terkait pesanan potong rambut Anda di ' + this.settings.serviceName + '...')}`;
-                },
-
-                get activeOrders() {
-                    return this.orders.filter(o => o.status !== 'Pesanan Selesai');
-                },
-
-                get historyOrders() {
-                    return this.orders.filter(o => o.status === 'Pesanan Selesai');
-                }
+            if(view === 'customer') {
+                document.getElementById('view-customer').classList.remove('hidden');
+                renderCustomerOrders();
+                document.getElementById('display-price').innerText = formatRupiah(appData.price);
+            } else if(view === 'login') {
+                document.getElementById('view-admin-login').classList.remove('hidden');
+            } else if(view === 'dashboard') {
+                document.getElementById('view-admin-dashboard').classList.remove('hidden');
+                renderAdminOrders();
+                updateStats();
             }
+        }
+
+        function checkAdminAccess() {
+            const logged = sessionStorage.getItem('adminLogged');
+            if(logged) {
+                switchView('dashboard');
+                document.getElementById('admin-logged-name').innerText = logged;
+            } else {
+                switchView('login');
+            }
+        }
+
+        // Login Admin
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const u = document.getElementById('login-user').value;
+            const p = document.getElementById('login-pass').value;
+
+            const found = appData.admins.find(adm => adm.name === u && adm.pass === p);
+            if(found) {
+                sessionStorage.setItem('adminLogged', u);
+                document.getElementById('admin-logged-name').innerText = u;
+                switchView('dashboard');
+            } else {
+                alert('Nama admin atau kata sandi salah!');
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('adminLogged');
+            switchView('customer');
+        }
+
+        // Tab Admin
+        function switchAdminTab(tab) {
+            document.getElementById('admin-tab-orders').classList.add('hidden');
+            document.getElementById('admin-tab-settings').classList.add('hidden');
+            document.getElementById('admin-tab-admins').classList.add('hidden');
+
+            document.getElementById('tab-btn-orders').className = "px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap";
+            document.getElementById('tab-btn-settings').className = "px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap";
+            document.getElementById('tab-btn-admins').className = "px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap";
+
+            if(tab === 'orders') {
+                document.getElementById('admin-tab-orders').classList.remove('hidden');
+                document.getElementById('tab-btn-orders').className = "px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold transition whitespace-nowrap";
+                renderAdminOrders();
+            } else if(tab === 'settings') {
+                document.getElementById('admin-tab-settings').classList.remove('hidden');
+                document.getElementById('tab-btn-settings').className = "px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold transition whitespace-nowrap";
+            } else if(tab === 'admins') {
+                document.getElementById('admin-tab-admins').classList.remove('hidden');
+                document.getElementById('tab-btn-admins').className = "px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold transition whitespace-nowrap";
+                renderAdminList();
+            }
+        }
+
+        // Kirim Pesanan oleh Customer
+        function submitOrder(e) {
+            e.preventDefault();
+            const name = document.getElementById('cust-name').value;
+            const wa = document.getElementById('cust-wa').value;
+            const address = document.getElementById('cust-address').value;
+            const desc = document.getElementById('cust-desc').value;
+
+            const now = new Date();
+            const timeString = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+            const newOrder = {
+                id: 'ORD-' + Date.now(),
+                name, wa, address, desc,
+                price: appData.price,
+                date: timeString,
+                status: 'Sedang di proses, mohon tunggu'
+            };
+
+            appData.orders.unshift(newOrder);
+            saveData();
+
+            // Format Pesan WhatsApp Otomatis ke Admin
+            const message = `Halo Admin, saya ingin memesan jasa potong rambut.%0A%0A*Nama:* ${name}%0A*No WA:* ${wa}%0A*Alamat:* ${address}%0A*Deskripsi:* ${desc}%0A*Total Biaya:* ${formatRupiah(appData.price)}%0A*Waktu:* ${timeString}%0A%0AMohon segera diproses ya!`;
+            
+            // Buka WhatsApp Admin Otomatis
+            window.open(`https://wa.me/${appData.adminWa}?text=${message}`, '_blank');
+
+            document.getElementById('order-form').reset();
+            alert('Pesanan berhasil dibuat dan pesan WhatsApp terkirim ke Admin!');
+            renderCustomerOrders();
+        }
+
+        // Render Pesanan di Sisi Customer
+        function renderCustomerOrders() {
+            const container = document.getElementById('customer-order-status');
+            if(appData.orders.length === 0) {
+                container.innerHTML = `<p class="text-sm text-slate-400 italic">Belum ada riwayat pesanan.</p>`;
+                return;
+            }
+
+            container.innerHTML = appData.orders.slice(0, 3).map(order => `
+                <div class="p-4 border rounded-xl bg-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-slate-700">${order.name}</span>
+                            <span class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">${order.status}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${order.address}</p>
+                        <p class="text-xs text-slate-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${order.date}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm font-bold text-primary">${formatRupiah(order.price)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Pesanan di Dashboard Admin
+        function renderAdminOrders() {
+            const tbody = document.getElementById('admin-orders-table');
+            if(appData.orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Belum ada pesanan masuk.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = appData.orders.map((order, index) => `
+                <tr class="border-b hover:bg-slate-50 transition">
+                    <td class="p-3 text-xs text-slate-500">${order.date}</td>
+                    <td class="p-3">
+                        <div class="font-bold text-slate-700">${order.name}</div>
+                        <a href="https://wa.me/${order.wa}" target="_blank" class="text-xs text-emerald-600 font-semibold hover:underline"><i class="fa-brands fa-whatsapp"></i> ${order.wa}</a>
+                    </td>
+                    <td class="p-3 text-xs text-slate-600">
+                        <p class="font-medium">${order.address}</p>
+                        <p class="text-slate-400 italic mt-0.5">${order.desc || '-'}</p>
+                    </td>
+                    <td class="p-3">
+                        <select onchange="updateOrderStatus(${index}, this.value)" class="text-xs border rounded-lg px-2 py-1 font-medium bg-white">
+                            <option value="Sedang di proses, mohon tunggu" ${order.status.includes('proses') ? 'selected' : ''}>Sedang di Proses</option>
+                            <option value="Sudah di terima oleh admin" ${order.status.includes('diterima') || order.status.includes('diterima oleh admin') ? 'selected' : ''}>Sudah Diterima Admin</option>
+                            <option value="Pesanan Selesai" ${order.status.includes('Selesai') ? 'selected' : ''}>Pesanan Selesai</option>
+                        </select>
+                    </td>
+                    <td class="p-3 text-center space-x-2">
+                        <button onclick="sendCustomerNotification(${index})" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 p-2 rounded-lg text-xs font-semibold" title="Kirim WA ke Customer"><i class="fa-brands fa-whatsapp"></i></button>
+                        <button onclick="deleteOrder(${index})" class="bg-rose-50 hover:bg-rose-100 text-rose-600 p-2 rounded-lg text-xs font-semibold" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            updateStats();
+        }
+
+        function updateOrderStatus(index, newStatus) {
+            appData.orders[index].status = newStatus;
+            saveData();
+            updateStats();
+        }
+
+        function sendCustomerNotification(index) {
+            const order = appData.orders[index];
+            const msg = `Halo ${order.name}, update pesanan cukur rambut Anda: *${order.status}*. Terima kasih telah menggunakan layanan BarberExpress!`;
+            window.open(`https://wa.me/${order.wa}?text=${msg}`, '_blank');
+        }
+
+        function deleteOrder(index) {
+            if(confirm('Yakin ingin menghapus riwayat pesanan ini?')) {
+                appData.orders.splice(index, 1);
+                saveData();
+                renderAdminOrders();
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('stat-total').innerText = appData.orders.length;
+            document.getElementById('stat-process').innerText = appData.orders.filter(o => o.status.includes('proses') || o.status.includes('diterima')).length;
+            document.getElementById('stat-done').innerText = appData.orders.filter(o => o.status.includes('Selesai')).length;
+        }
+
+        // Simpan Pengaturan & Notifikasi
+        function saveSettings(e) {
+            e.preventDefault();
+            appData.price = Number(document.getElementById('setting-price').value);
+            appData.adminWa = document.getElementById('setting-admin-wa').value;
+            appData.theme = document.getElementById('setting-theme').value;
+            saveData();
+
+            // Tampilkan Modal Notifikasi
+            document.getElementById('notification-modal').classList.remove('hidden');
+        }
+
+        function closeNotificationModal() {
+            document.getElementById('notification-modal').classList.add('hidden');
+        }
+
+        // Tambah Admin Baru dengan Kode Khusus
+        function addNewAdmin(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-adm-name').value;
+            const pass = document.getElementById('new-adm-pass').value;
+            const code = document.getElementById('new-adm-code').value;
+
+            if(code !== SECRET_REGISTRATION_CODE) {
+                alert('Kode khusus pendaftaran admin salah!');
+                return;
+            }
+
+            appData.admins.push({ name, pass, code });
+            saveData();
+            renderAdminList();
+            document.getElementById('new-adm-name').value = '';
+            document.getElementById('new-adm-pass').value = '';
+            document.getElementById('new-adm-code').value = '';
+            alert('Admin baru berhasil ditambahkan!');
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('admin-list-container');
+            list.innerHTML = appData.admins.map((adm, i) => `
+                <li class="py-2 px-3 flex justify-between items-center text-sm">
+                    <span class="font-medium text-slate-700"><i class="fa-solid fa-user-gear mr-2 text-primary"></i>${adm.name}</span>
+                    ${i > 0 ? `<button onclick="deleteAdmin(${i})" class="text-rose-500 hover:text-rose-700 text-xs"><i class="fa-solid fa-trash"></i> Hapus</button>` : `<span class="text-xs text-slate-400 italic">Utama</span>`}
+                </li>
+            `).join('');
+        }
+
+        function deleteAdmin(i) {
+            if(confirm('Hapus admin ini?')) {
+                appData.admins.splice(i, 1);
+                saveData();
+                renderAdminList();
+            }
+        }
+
+        function formatRupiah(number) {
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(number);
         }
     </script>
 </body>
