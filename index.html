@@ -245,18 +245,11 @@
     <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
         &copy; 2026 BarberExpress. Solusi Potong Rambut Panggilan Langsung ke Rumah Anda.
     </footer>
-
+<script>"https://console.firebase.google.com/u/0/project/jasa-potong-rambut/database/jasa-potong-rambut-default-rtdb/data/~2F?hl=id&fb_gclid=Cj0KCQjwo_PRBhDNARIsAEcVALX9Q94oq17V3DVQoqVHzKBulPd_B9G084nnyBdv5IMKvNyKL54w-rYaAstEEALw_wcB&fb_utm_campaign=Cloud-SS-DR-Firebase-FY26-global-gsem-1713590&fb_utm_content=text-ad&fb_utm_medium=cpc&fb_utm_source=google&fb_utm_term=KW_firebase"</script>
     <!-- SCRIPT APLIKASI & LOGIKA -->
     <script>
 
-       // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBh9gCnqymwpRHfYbrdwKe0l3l-uLsFdxA",
   authDomain: "jasa-potong-rambut.firebaseapp.com",
@@ -265,7 +258,14 @@ const firebaseConfig = {
   messagingSenderId: "816817050793",
   appId: "1:816817050793:web:c6871845f621f20348c5b8",
   measurementId: "G-MR5RZL7WMF"
+
 };
+
+        
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+
         
         let appData = JSON.parse(localStorage.getItem('barberAppData')) || {
             price: 50000,
