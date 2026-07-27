@@ -46,11 +46,11 @@
 
         <!-- ================= VIEW: CUSTOMER DASHBOARD ================= -->
         <section id="view-customer" class="space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 max-w-2xl mx-auto">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-bold text-slate-700"><i class="fa-solid fa-calendar-plus text-primary mr-2"></i>Pesan Jasa Potong Rambut</h2>
                     <div class="text-right">
-                        <span class="text-sm text-slate-500">Tarif Layanan Saat Ini:</span>
+                        <span class="text-sm text-slate-500">Tarif Layanan:</span>
                         <div id="display-price" class="text-lg font-bold text-primary">Rp 0</div>
                     </div>
                 </div>
@@ -78,14 +78,6 @@
                         </button>
                     </div>
                 </form>
-            </div>
-
-            <!-- Tracking Pesanan Customer -->
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <h3 class="text-lg font-bold text-slate-700 mb-4"><i class="fa-solid fa-clock-rotate-left text-primary mr-2"></i>Status & Riwayat Pesanan Anda</h3>
-                <div id="customer-order-status" class="space-y-3">
-                    <p class="text-sm text-slate-400 italic">Belum ada pesanan aktif hari ini.</p>
-                </div>
             </div>
         </section>
 
@@ -255,7 +247,6 @@
 
     <!-- SCRIPT APLIKASI & LOGIKA -->
     <script>
-        // Database Lokal Inisialisasi (Bisa dihubungkan ke Firebase)
         let appData = JSON.parse(localStorage.getItem('barberAppData')) || {
             price: 50000,
             adminWa: "6281234567890",
@@ -266,9 +257,8 @@
             orders: []
         };
 
-        const SECRET_REGISTRATION_CODE = "BARBER2026"; // Kata code khusus untuk daftar admin
+        const SECRET_REGISTRATION_CODE = "BARBER2026";
 
-        // Theme mapping color variables
         const themes = {
             blue: { primary: '#2563eb', secondary: '#1e40af' },
             emerald: { primary: '#059669', secondary: '#047857' },
@@ -287,22 +277,18 @@
             document.documentElement.style.setProperty('--color-primary', theme.primary);
             document.documentElement.style.setProperty('--color-secondary', theme.secondary);
             const header = document.getElementById('main-header');
-            header.className = `text-white shadow-md transition-colors duration-300`;
             header.style.backgroundColor = theme.primary;
         }
 
-        // Inisialisasi Awal Halaman
         window.onload = function() {
             applyTheme(appData.theme);
             document.getElementById('setting-price').value = appData.price;
             document.getElementById('setting-admin-wa').value = appData.adminWa;
             document.getElementById('setting-theme').value = appData.theme;
             document.getElementById('display-price').innerText = formatRupiah(appData.price);
-            renderCustomerOrders();
             renderAdminList();
         }
 
-        // Navigasi Tampilan Utama
         function switchView(view) {
             document.getElementById('view-customer').classList.add('hidden');
             document.getElementById('view-admin-login').classList.add('hidden');
@@ -310,7 +296,6 @@
 
             if(view === 'customer') {
                 document.getElementById('view-customer').classList.remove('hidden');
-                renderCustomerOrders();
                 document.getElementById('display-price').innerText = formatRupiah(appData.price);
             } else if(view === 'login') {
                 document.getElementById('view-admin-login').classList.remove('hidden');
@@ -331,7 +316,6 @@
             }
         }
 
-        // Login Admin
         function handleAdminLogin(e) {
             e.preventDefault();
             const u = document.getElementById('login-user').value;
@@ -352,7 +336,6 @@
             switchView('customer');
         }
 
-        // Tab Admin
         function switchAdminTab(tab) {
             document.getElementById('admin-tab-orders').classList.add('hidden');
             document.getElementById('admin-tab-settings').classList.add('hidden');
@@ -376,7 +359,6 @@
             }
         }
 
-        // Kirim Pesanan oleh Customer
         function submitOrder(e) {
             e.preventDefault();
             const name = document.getElementById('cust-name').value;
@@ -398,43 +380,14 @@
             appData.orders.unshift(newOrder);
             saveData();
 
-            // Format Pesan WhatsApp Otomatis ke Admin
             const message = `Halo Admin, saya ingin memesan jasa potong rambut.%0A%0A*Nama:* ${name}%0A*No WA:* ${wa}%0A*Alamat:* ${address}%0A*Deskripsi:* ${desc}%0A*Total Biaya:* ${formatRupiah(appData.price)}%0A*Waktu:* ${timeString}%0A%0AMohon segera diproses ya!`;
             
-            // Buka WhatsApp Admin Otomatis
             window.open(`https://wa.me/${appData.adminWa}?text=${message}`, '_blank');
 
             document.getElementById('order-form').reset();
             alert('Pesanan berhasil dibuat dan pesan WhatsApp terkirim ke Admin!');
-            renderCustomerOrders();
         }
 
-        // Render Pesanan di Sisi Customer
-        function renderCustomerOrders() {
-            const container = document.getElementById('customer-order-status');
-            if(appData.orders.length === 0) {
-                container.innerHTML = `<p class="text-sm text-slate-400 italic">Belum ada riwayat pesanan.</p>`;
-                return;
-            }
-
-            container.innerHTML = appData.orders.slice(0, 3).map(order => `
-                <div class="p-4 border rounded-xl bg-slate-50 flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
-                    <div>
-                        <div class="flex items-center space-x-2">
-                            <span class="font-bold text-slate-700">${order.name}</span>
-                            <span class="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-medium">${order.status}</span>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-1"><i class="fa-solid fa-location-dot mr-1"></i>${order.address}</p>
-                        <p class="text-xs text-slate-400 mt-0.5"><i class="fa-regular fa-clock mr-1"></i>${order.date}</p>
-                    </div>
-                    <div class="text-right">
-                        <span class="text-sm font-bold text-primary">${formatRupiah(order.price)}</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render Pesanan di Dashboard Admin
         function renderAdminOrders() {
             const tbody = document.getElementById('admin-orders-table');
             if(appData.orders.length === 0) {
@@ -495,7 +448,6 @@
             document.getElementById('stat-done').innerText = appData.orders.filter(o => o.status.includes('Selesai')).length;
         }
 
-        // Simpan Pengaturan & Notifikasi
         function saveSettings(e) {
             e.preventDefault();
             appData.price = Number(document.getElementById('setting-price').value);
@@ -503,7 +455,6 @@
             appData.theme = document.getElementById('setting-theme').value;
             saveData();
 
-            // Tampilkan Modal Notifikasi
             document.getElementById('notification-modal').classList.remove('hidden');
         }
 
@@ -511,7 +462,6 @@
             document.getElementById('notification-modal').classList.add('hidden');
         }
 
-        // Tambah Admin Baru dengan Kode Khusus
         function addNewAdmin(e) {
             e.preventDefault();
             const name = document.getElementById('new-adm-name').value;
