@@ -7,7 +7,6 @@
     <!-- Tailwind CSS untuk Desain Rapi & Modern -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome untuk Ikon -->
-    <script src="https://jasa-potong-rambut-default-rtdb.asia-southeast1.firebasedatabase.app/"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
@@ -22,16 +21,16 @@
         }
     </script>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between">
+<body id="body-bg" class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between transition-colors duration-300">
 
     <!-- HEADER / NAVBAR -->
     <header id="main-header" class="bg-primary text-white shadow-md transition-colors duration-300">
         <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="switchView('customer')">
                 <i class="fa-solid fa-scissors text-2xl"></i>
                 <h1 class="text-xl font-bold tracking-wide">BarberExpress</h1>
             </div>
-            <div class="space-x-3">
+            <div class="space-x-2 sm:space-x-3">
                 <button onclick="switchView('customer')" class="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm transition font-medium">
                     <i class="fa-solid fa-user mr-1"></i> Dashboard Customer
                 </button>
@@ -47,35 +46,39 @@
 
         <!-- ================= VIEW: CUSTOMER DASHBOARD ================= -->
         <section id="view-customer" class="space-y-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 max-w-2xl mx-auto">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-bold text-slate-700"><i class="fa-solid fa-calendar-plus text-primary mr-2"></i>Pesan Jasa Potong Rambut</h2>
+            <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100 max-w-2xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-700"><i class="fa-solid fa-calendar-plus text-primary mr-2"></i>Pesan Jasa Potong Rambut</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Layanan profesional langsung panggil ke rumah Anda</p>
+                    </div>
                     <div class="text-right">
-                        <span class="text-sm text-slate-500">Tarif Layanan:</span>
+                        <span class="text-xs text-slate-500 block">Tarif Layanan:</span>
                         <div id="display-price" class="text-lg font-bold text-primary">Rp 0</div>
                     </div>
                 </div>
 
                 <form id="order-form" onsubmit="submitOrder(event)" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Nama Lengkap</label>
-                        <input type="text" id="cust-name" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Nama Lengkap Customer</label>
+                        <input type="text" id="cust-name" required placeholder="Nama Anda" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Nomor WhatsApp</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Nomor WhatsApp Customer</label>
                         <input type="tel" id="cust-wa" placeholder="Contoh: 628123456789" required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none">
                     </div>
                     <div class="md:col-span-2">
                         <label class="block text-sm font-medium text-slate-600 mb-1">Alamat Lengkap</label>
-                        <textarea id="cust-address" rows="2" placeholder="Jalan, No Rumah, Patokan..." required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none"></textarea>
+                        <textarea id="cust-address" rows="2" placeholder="Jalan, No Rumah, Patokan lokasi..." required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none"></textarea>
                     </div>
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Deskripsi / Model Rambut Pilihan</label>
-                        <textarea id="cust-desc" rows="2" placeholder="Contoh: Model Undercut rapi, untuk anak umur 7 tahun..." class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none"></textarea>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Nama Barang / Deskripsi Model Rambut</label>
+                        <textarea id="cust-desc" rows="2" placeholder="Contoh: Model Undercut rapi, untuk dewasa..." required class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-primary outline-none"></textarea>
                     </div>
                     <div class="md:col-span-2">
-                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-blue-500/30">
-                            <i class="fa-brands fa-whatsapp mr-2 text-lg"></i> Pesan Sekarang & Kirim ke WhatsApp Admin
+                        <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-blue-500/30 flex items-center justify-center space-x-2">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            <span>Pesan Sekarang & Kirim ke WA Admin</span>
                         </button>
                     </div>
                 </form>
@@ -87,7 +90,7 @@
             <div class="text-center mb-6">
                 <i class="fa-solid fa-shield-halved text-4xl text-primary mb-2"></i>
                 <h2 class="text-2xl font-bold text-slate-700">Login Admin</h2>
-                <p class="text-sm text-slate-400">Masukkan kredensial admin yang terdaftar</p>
+                <p class="text-sm text-slate-400">Masukkan Nama, Kata Sandi, dan Kode Khusus</p>
             </div>
             <form onsubmit="handleAdminLogin(event)" class="space-y-4">
                 <div>
@@ -97,6 +100,10 @@
                 <div>
                     <label class="block text-sm font-medium text-slate-600 mb-1">Kata Sandi</label>
                     <input type="password" id="login-pass" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-600 mb-1">Kode Khusus Admin</label>
+                    <input type="password" id="login-code" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
                 </div>
                 <button type="submit" class="w-full bg-primary hover:bg-secondary text-white font-semibold py-2.5 rounded-xl transition">Masuk Dashboard</button>
                 <button type="button" onclick="switchView('customer')" class="w-full text-sm text-slate-500 hover:underline mt-2">Kembali ke Beranda</button>
@@ -111,11 +118,11 @@
                     <div class="bg-primary/10 p-2.5 rounded-xl text-primary"><i class="fa-solid fa-user-shield text-xl"></i></div>
                     <div>
                         <h3 class="font-bold text-slate-700" id="admin-logged-name">Administrator</h3>
-                        <p class="text-xs text-slate-400">Panel Kontrol Utama</p>
+                        <p class="text-xs text-slate-400">Panel Kontrol Utama (Firebase Connected)</p>
                     </div>
                 </div>
                 <button onclick="adminLogout()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-4 py-2 rounded-xl text-sm font-semibold transition">
-                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout
+                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Logout Admin
                 </button>
             </div>
 
@@ -146,27 +153,27 @@
 
             <!-- Tab Navigasi Fitur Admin -->
             <div class="flex space-x-2 border-b border-slate-200 pb-2 overflow-x-auto">
-                <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold transition whitespace-nowrap">Kelola Pesanan</button>
-                <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap">Pengaturan Jasa & Harga</button>
-                <button onclick="switchAdminTab('admins')" id="tab-btn-admins" class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap">Daftar Admin & Kode Khusus</button>
+                <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold transition whitespace-nowrap">Kelola Pesanan & History</button>
+                <button onclick="switchAdminTab('settings')" id="tab-btn-settings" class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap">Pengaturan Jasa & Warna</button>
+                <button onclick="switchAdminTab('admins')" id="tab-btn-admins" class="px-4 py-2 bg-white text-slate-600 hover:bg-slate-100 rounded-xl text-sm font-semibold transition whitespace-nowrap">Daftar Admin</button>
             </div>
 
             <!-- TAB 1: KELOLA PESANAN & HISTORY -->
             <div id="admin-tab-orders" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                <h3 class="font-bold text-slate-700 text-lg">Daftar Pesanan Masuk & Riwayat</h3>
+                <h3 class="font-bold text-slate-700 text-lg">Daftar Pesanan Masuk & Riwayat Selesai</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="border-b text-xs uppercase text-slate-400 font-semibold bg-slate-50">
-                                <th class="p-3">Waktu / Tanggal</th>
+                                <th class="p-3">Waktu, Tanggal, Bulan, Tahun, Jam</th>
                                 <th class="p-3">Customer & WA</th>
-                                <th class="p-3">Alamat & Deskripsi</th>
+                                <th class="p-3">Barang / Alamat</th>
                                 <th class="p-3">Status</th>
-                                <th class="p-3 text-center">Aksi / Kirim WA Otomatis</th>
+                                <th class="p-3 text-center">Aksi / Kirim WA</th>
                             </tr>
                         </thead>
                         <tbody id="admin-orders-table" class="text-sm">
-                            <!-- Data Pesanan Masuk Disini -->
+                            <!-- Data Pesanan Disini -->
                         </tbody>
                     </table>
                 </div>
@@ -174,18 +181,18 @@
 
             <!-- TAB 2: PENGATURAN HARGA & TEMA WARNA OTOMATIS -->
             <div id="admin-tab-settings" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                <h3 class="font-bold text-slate-700 text-lg">Pengaturan Tarif & Tema Aplikasi</h3>
+                <h3 class="font-bold text-slate-700 text-lg">Pengaturan Jasa, Harga, & Latar Belakang Otomatis</h3>
                 <form onsubmit="saveSettings(event)" class="space-y-4 max-w-lg">
                     <div>
                         <label class="block text-sm font-medium text-slate-600 mb-1">Harga Potong Rambut (Rp)</label>
                         <input type="number" id="setting-price" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">No WhatsApp Admin (Penerima Notifikasi)</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">No WhatsApp Admin (Penerima Pesanan)</label>
                         <input type="text" id="setting-admin-wa" placeholder="628xxxxxxxxxx" required class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Pilih Tema Warna Otomatis</label>
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Pilih Tema Warna Latar Belakang Otomatis</label>
                         <select id="setting-theme" class="w-full px-4 py-2 border rounded-xl outline-none focus:ring-2 focus:ring-primary">
                             <option value="blue">Biru Elegan (Default)</option>
                             <option value="emerald">Hijau Emerald</option>
@@ -194,13 +201,13 @@
                             <option value="amber">Amber Gold</option>
                         </select>
                     </div>
-                    <button type="submit" class="bg-primary text-white font-semibold px-6 py-2.5 rounded-xl transition hover:opacity-90">Simpan Perubahan</button>
+                    <button type="submit" class="bg-primary text-white font-semibold px-6 py-2.5 rounded-xl transition hover:opacity-90">Simpan Perubahan Pengaturan</button>
                 </form>
             </div>
 
-            <!-- TAB 3: DAFTAR ADMIN & KODE KHUSUS -->
+            <!-- TAB 3: DAFTAR ADMIN -->
             <div id="admin-tab-admins" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
-                <h3 class="font-bold text-slate-700 text-lg">Tambah Admin Baru & Kode Khusus Verifikasi</h3>
+                <h3 class="font-bold text-slate-700 text-lg">Manajemen Daftar Admin (Nama, Kata Sandi, & Kode Khusus)</h3>
                 <form onsubmit="addNewAdmin(event)" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                     <div>
                         <label class="block text-sm font-medium text-slate-600 mb-1">Nama Admin</label>
@@ -211,15 +218,15 @@
                         <input type="password" id="new-adm-pass" required class="w-full px-4 py-2 border rounded-xl outline-none">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-slate-600 mb-1">Kode Khusus Pendaftaran</label>
-                        <input type="password" id="new-adm-code" placeholder="Kode Rahasia" required class="w-full px-4 py-2 border rounded-xl outline-none">
+                        <label class="block text-sm font-medium text-slate-600 mb-1">Kode Khusus</label>
+                        <input type="password" id="new-adm-code" required class="w-full px-4 py-2 border rounded-xl outline-none">
                     </div>
                     <div>
                         <button type="submit" class="w-full bg-primary text-white font-semibold py-2 rounded-xl transition">Tambah Admin</button>
                     </div>
                 </form>
                 <div class="mt-6">
-                    <h4 class="font-semibold text-slate-600 mb-2">Daftar Admin Terdaftar</h4>
+                    <h4 class="font-semibold text-slate-600 mb-2">Daftar Akun Admin Terdaftar</h4>
                     <ul id="admin-list-container" class="divide-y divide-slate-100 border rounded-xl p-2">
                         <!-- List Admin -->
                     </ul>
@@ -235,8 +242,8 @@
             <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-check"></i>
             </div>
-            <h3 class="text-lg font-bold text-slate-700" id="notif-title">Berhasil!</h3>
-            <p id="notif-message" class="text-sm text-slate-500">Perubahan pengaturan telah berhasil disimpan secara otomatis.</p>
+            <h3 class="text-lg font-bold text-slate-700">Berhasil Disimpan!</h3>
+            <p class="text-sm text-slate-500">Perubahan pengaturan berhasil diperbarui & disimpan ke Firebase.</p>
             <button onclick="closeNotificationModal()" class="w-full bg-primary text-white py-2 rounded-xl font-semibold">OK</button>
         </div>
     </div>
@@ -245,39 +252,35 @@
     <footer class="bg-white border-t border-slate-100 py-4 text-center text-xs text-slate-400">
         &copy; 2026 BarberExpress. Solusi Potong Rambut Panggilan Langsung ke Rumah Anda.
     </footer>
-<script>"https://console.firebase.google.com/u/0/project/jasa-potong-rambut/database/jasa-potong-rambut-default-rtdb/data/~2F?hl=id&fb_gclid=Cj0KCQjwo_PRBhDNARIsAEcVALX9Q94oq17V3DVQoqVHzKBulPd_B9G084nnyBdv5IMKvNyKL54w-rYaAstEEALw_wcB&fb_utm_campaign=Cloud-SS-DR-Firebase-FY26-global-gsem-1713590&fb_utm_content=text-ad&fb_utm_medium=cpc&fb_utm_source=google&fb_utm_term=KW_firebase"</script>
-    <!-- SCRIPT APLIKASI & LOGIKA -->
-    <script>
 
-       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBh9gCnqymwpRHfYbrdwKe0l3l-uLsFdxA",
-  authDomain: "jasa-potong-rambut.firebaseapp.com",
-  projectId: "jasa-potong-rambut",
-  storageBucket: "jasa-potong-rambut.firebasestorage.app",
-  messagingSenderId: "816817050793",
-  appId: "1:816817050793:web:c6871845f621f20348c5b8",
-  measurementId: "G-MR5RZL7WMF"
+    <!-- FIREBASE SDK & LOGIKA APLIKASI -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, update, remove, child } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyBh9gCnqymwpRHfYbrdwKe0l3l-uLsFdxA",
+            authDomain: "jasa-potong-rambut.firebaseapp.com",
+            databaseURL: "https://jasa-potong-rambut-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "jasa-potong-rambut",
+            storageBucket: "jasa-potong-rambut.firebasestorage.app",
+            messagingSenderId: "816817050793",
+            appId: "1:816817050793:web:c6871845f621f20348c5b8",
+            measurementId: "G-MR5RZL7WMF"
+        };
 
-        
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-        
-        let appData = JSON.parse(localStorage.getItem('barberAppData')) || {
+        let appData = {
             price: 50000,
             adminWa: "6281234567890",
             theme: "blue",
-            admins: [
-                { name: "SuperAdmin", pass: "admin123", code: "BARBER2026" }
-            ],
-            orders: []
+            admins: {
+                "adm1": { name: "SuperAdmin", pass: "admin123", code: "BARBER2026" }
+            },
+            orders: {}
         };
-
-        const SECRET_REGISTRATION_CODE = "BARBER2026";
 
         const themes = {
             blue: { primary: '#2563eb', secondary: '#1e40af' },
@@ -287,29 +290,52 @@ const firebaseConfig = {
             amber: { primary: '#d97706', secondary: '#b45309' }
         };
 
-        function saveData() {
-            localStorage.setItem('barberAppData', JSON.stringify(appData));
-            applyTheme(appData.theme);
-        }
-
         function applyTheme(themeName) {
             const theme = themes[themeName] || themes.blue;
             document.documentElement.style.setProperty('--color-primary', theme.primary);
             document.documentElement.style.setProperty('--color-secondary', theme.secondary);
             const header = document.getElementById('main-header');
-            header.style.backgroundColor = theme.primary;
+            if(header) header.style.backgroundColor = theme.primary;
         }
 
-        window.onload = function() {
+        // Load data dari Firebase saat pertama buka
+        async function loadFirebaseData() {
+            try {
+                const snapshot = await get(child(ref(db), '/'));
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if(data.price) appData.price = data.price;
+                    if(data.adminWa) appData.adminWa = data.adminWa;
+                    if(data.theme) appData.theme = data.theme;
+                    if(data.admins) appData.admins = data.admins;
+                    if(data.orders) appData.orders = data.orders;
+                } else {
+                    // Set default ke Firebase jika masih kosong
+                    await set(ref(db, '/'), appData);
+                }
+            } catch(e) {
+                console.error("Gagal memuat dari Firebase:", e);
+            }
+
             applyTheme(appData.theme);
-            document.getElementById('setting-price').value = appData.price;
-            document.getElementById('setting-admin-wa').value = appData.adminWa;
-            document.getElementById('setting-theme').value = appData.theme;
-            document.getElementById('display-price').innerText = formatRupiah(appData.price);
+            const priceInput = document.getElementById('setting-price');
+            const waInput = document.getElementById('setting-admin-wa');
+            const themeInput = document.getElementById('setting-theme');
+            const displayPrice = document.getElementById('display-price');
+
+            if(priceInput) priceInput.value = appData.price;
+            if(waInput) waInput.value = appData.adminWa;
+            if(themeInput) themeInput.value = appData.theme;
+            if(displayPrice) displayPrice.innerText = formatRupiah(appData.price);
             renderAdminList();
+            renderAdminOrders();
         }
 
-        function switchView(view) {
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFirebaseData();
+        });
+
+        window.switchView = function(view) {
             document.getElementById('view-customer').classList.add('hidden');
             document.getElementById('view-admin-login').classList.add('hidden');
             document.getElementById('view-admin-dashboard').classList.add('hidden');
@@ -326,37 +352,49 @@ const firebaseConfig = {
             }
         }
 
-        function checkAdminAccess() {
+        window.checkAdminAccess = function() {
             const logged = sessionStorage.getItem('adminLogged');
             if(logged) {
-                switchView('dashboard');
+                window.switchView('dashboard');
                 document.getElementById('admin-logged-name').innerText = logged;
             } else {
-                switchView('login');
+                window.switchView('login');
             }
         }
 
-        function handleAdminLogin(e) {
+        window.handleAdminLogin = function(e) {
             e.preventDefault();
-            const u = document.getElementById('login-user').value;
-            const p = document.getElementById('login-pass').value;
+            const u = document.getElementById('login-user').value.trim();
+            const p = document.getElementById('login-pass').value.trim();
+            const c = document.getElementById('login-code').value.trim();
 
-            const found = appData.admins.find(adm => adm.name === u && adm.pass === p);
+            let found = false;
+            for(let key in appData.admins) {
+                let adm = appData.admins[key];
+                if(adm.name === u && adm.pass === p && adm.code === c) {
+                    found = true;
+                    break;
+                }
+            }
+
             if(found) {
                 sessionStorage.setItem('adminLogged', u);
                 document.getElementById('admin-logged-name').innerText = u;
-                switchView('dashboard');
+                window.switchView('dashboard');
+                document.getElementById('login-user').value = '';
+                document.getElementById('login-pass').value = '';
+                document.getElementById('login-code').value = '';
             } else {
-                alert('Nama admin atau kata sandi salah!');
+                alert('Nama Admin, Kata Sandi, atau Kode Khusus salah!');
             }
         }
 
-        function adminLogout() {
+        window.adminLogout = function() {
             sessionStorage.removeItem('adminLogged');
-            switchView('customer');
+            window.switchView('customer');
         }
 
-        function switchAdminTab(tab) {
+        window.switchAdminTab = function(tab) {
             document.getElementById('admin-tab-orders').classList.add('hidden');
             document.getElementById('admin-tab-settings').classList.add('hidden');
             document.getElementById('admin-tab-admins').classList.add('hidden');
@@ -379,143 +417,207 @@ const firebaseConfig = {
             }
         }
 
-        function submitOrder(e) {
+        window.submitOrder = async function(e) {
             e.preventDefault();
             const name = document.getElementById('cust-name').value;
             const wa = document.getElementById('cust-wa').value;
             const address = document.getElementById('cust-address').value;
             const desc = document.getElementById('cust-desc').value;
 
+            // Waktu lengkap: Hari, Tanggal, Bulan, Tahun, Jam
             const now = new Date();
-            const timeString = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()} ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            const timeString = now.toLocaleDateString('id-ID', options) + ' ' + now.toLocaleTimeString('id-ID');
 
+            const orderId = 'ORD-' + Date.now();
             const newOrder = {
-                id: 'ORD-' + Date.now(),
+                id: orderId,
                 name, wa, address, desc,
                 price: appData.price,
                 date: timeString,
-                status: 'Sedang di proses, mohon tunggu'
+                status: 'Pesanan sudah di terima oleh admin'
             };
 
-            appData.orders.unshift(newOrder);
-            saveData();
+            if(!appData.orders) appData.orders = {};
+            appData.orders[orderId] = newOrder;
 
-            const message = `Halo Admin, saya ingin memesan jasa potong rambut.%0A%0A*Nama:* ${name}%0A*No WA:* ${wa}%0A*Alamat:* ${address}%0A*Deskripsi:* ${desc}%0A*Total Biaya:* ${formatRupiah(appData.price)}%0A*Waktu:* ${timeString}%0A%0AMohon segera diproses ya!`;
+            try {
+                await set(ref(db, 'orders/' + orderId), newOrder);
+            } catch(err) {
+                console.error("Gagal simpan order ke Firebase", err);
+            }
+
+            const message = `Halo Admin, pesanan baru diterima!%0A%0A*Nama Customer:* ${name}%0A*No WhatsApp:* ${wa}%0A*Nama Barang / Model:* ${desc}%0A*Alamat:* ${address}%0A*Total Harga:* ${formatRupiah(appData.price)}%0A*Waktu:* ${timeString}%0A%0AMohon segera diproses!`;
             
             window.open(`https://wa.me/${appData.adminWa}?text=${message}`, '_blank');
 
             document.getElementById('order-form').reset();
-            alert('Pesanan berhasil dibuat dan pesan WhatsApp terkirim ke Admin!');
+            alert('Pesanan berhasil dibuat & pesan otomatis terkirim ke WhatsApp Admin!');
+            window.switchView('customer');
+            renderAdminOrders();
         }
 
-        function renderAdminOrders() {
+        window.renderAdminOrders = function() {
             const tbody = document.getElementById('admin-orders-table');
-            if(appData.orders.length === 0) {
+            if(!tbody) return;
+
+            const ordersObj = appData.orders || {};
+            const keys = Object.keys(ordersObj);
+
+            if(keys.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400 italic">Belum ada pesanan masuk.</td></tr>`;
+                updateStats();
                 return;
             }
 
-            tbody.innerHTML = appData.orders.map((order, index) => `
-                <tr class="border-b hover:bg-slate-50 transition">
-                    <td class="p-3 text-xs text-slate-500">${order.date}</td>
-                    <td class="p-3">
-                        <div class="font-bold text-slate-700">${order.name}</div>
-                        <a href="https://wa.me/${order.wa}" target="_blank" class="text-xs text-emerald-600 font-semibold hover:underline"><i class="fa-brands fa-whatsapp"></i> ${order.wa}</a>
-                    </td>
-                    <td class="p-3 text-xs text-slate-600">
-                        <p class="font-medium">${order.address}</p>
-                        <p class="text-slate-400 italic mt-0.5">${order.desc || '-'}</p>
-                    </td>
-                    <td class="p-3">
-                        <select onchange="updateOrderStatus(${index}, this.value)" class="text-xs border rounded-lg px-2 py-1 font-medium bg-white">
-                            <option value="Sedang di proses, mohon tunggu" ${order.status.includes('proses') ? 'selected' : ''}>Sedang di Proses</option>
-                            <option value="Sudah di terima oleh admin" ${order.status.includes('diterima') || order.status.includes('diterima oleh admin') ? 'selected' : ''}>Sudah Diterima Admin</option>
-                            <option value="Pesanan Selesai" ${order.status.includes('Selesai') ? 'selected' : ''}>Pesanan Selesai</option>
-                        </select>
-                    </td>
-                    <td class="p-3 text-center space-x-2">
-                        <button onclick="sendCustomerNotification(${index})" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 p-2 rounded-lg text-xs font-semibold" title="Kirim WA ke Customer"><i class="fa-brands fa-whatsapp"></i></button>
-                        <button onclick="deleteOrder(${index})" class="bg-rose-50 hover:bg-rose-100 text-rose-600 p-2 rounded-lg text-xs font-semibold" title="Hapus"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = keys.map((key) => {
+                const order = ordersObj[key];
+                return `
+                    <tr class="border-b hover:bg-slate-50 transition">
+                        <td class="p-3 text-xs text-slate-500 font-medium">${order.date}</td>
+                        <td class="p-3">
+                            <div class="font-bold text-slate-700">${order.name}</div>
+                            <a href="https://wa.me/${order.wa}" target="_blank" class="text-xs text-emerald-600 font-semibold hover:underline"><i class="fa-brands fa-whatsapp"></i> ${order.wa}</a>
+                        </td>
+                        <td class="p-3 text-xs text-slate-600">
+                            <p class="font-semibold text-slate-800">${order.desc}</p>
+                            <p class="text-slate-500 mt-0.5">${order.address}</p>
+                        </td>
+                        <td class="p-3">
+                            <select onchange="updateOrderStatus('${order.id}', this.value)" class="text-xs border rounded-lg px-2 py-1 font-medium bg-white">
+                                <option value="Pesanan sudah di terima oleh admin" ${order.status.includes('diterima') ? 'selected' : ''}>Pesanan Diterima</option>
+                                <option value="Sedang di proses, mohon tunggu" ${order.status.includes('proses') ? 'selected' : ''}>Sedang Diproses</option>
+                                <option value="Pesanan Selesai" ${order.status.includes('Selesai') ? 'selected' : ''}>Pesanan Selesai</option>
+                            </select>
+                        </td>
+                        <td class="p-3 text-center space-x-1">
+                            <button onclick="sendCustomerNotification('${order.id}')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 px-2.5 py-1.5 rounded-lg text-xs font-semibold" title="Kirim WA ke Customer"><i class="fa-brands fa-whatsapp"></i> WA</button>
+                            <button onclick="deleteOrder('${order.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-2.5 py-1.5 rounded-lg text-xs font-semibold" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
             updateStats();
         }
 
-        function updateOrderStatus(index, newStatus) {
-            appData.orders[index].status = newStatus;
-            saveData();
-            updateStats();
+        window.updateOrderStatus = async function(orderId, newStatus) {
+            if(appData.orders[orderId]) {
+                appData.orders[orderId].status = newStatus;
+                try {
+                    await update(ref(db, 'orders/' + orderId), { status: newStatus });
+                } catch(e) { console.error(e); }
+                renderAdminOrders();
+                window.sendCustomerNotification(orderId);
+            }
         }
 
-        function sendCustomerNotification(index) {
-            const order = appData.orders[index];
-            const msg = `Halo ${order.name}, update pesanan cukur rambut Anda: *${order.status}*. Terima kasih telah menggunakan layanan BarberExpress!`;
-            window.open(`https://wa.me/${order.wa}?text=${msg}`, '_blank');
+        window.sendCustomerNotification = function(orderId) {
+            const order = appData.orders[orderId];
+            if(!order) return;
+            const msg = `Halo Kak *${order.name}*,\n\nUpdate status pesanan Anda:\n👉 *${order.status}*\n\nTerima kasih telah memesan layanan kami!`;
+            window.open(`https://wa.me/${order.wa}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        function deleteOrder(index) {
-            if(confirm('Yakin ingin menghapus riwayat pesanan ini?')) {
-                appData.orders.splice(index, 1);
-                saveData();
+        window.deleteOrder = async function(orderId) {
+            if(confirm('Yakin ingin menghapus data pesanan / history ini?')) {
+                delete appData.orders[orderId];
+                try {
+                    await remove(ref(db, 'orders/' + orderId));
+                } catch(e) { console.error(e); }
                 renderAdminOrders();
             }
         }
 
-        function updateStats() {
-            document.getElementById('stat-total').innerText = appData.orders.length;
-            document.getElementById('stat-process').innerText = appData.orders.filter(o => o.status.includes('proses') || o.status.includes('diterima')).length;
-            document.getElementById('stat-done').innerText = appData.orders.filter(o => o.status.includes('Selesai')).length;
+        window.updateStats = function() {
+            const ordersObj = appData.orders || {};
+            const list = Object.values(ordersObj);
+            const total = list.length;
+            const process = list.filter(o => !o.status.includes('Selesai')).length;
+            const done = list.filter(o => o.status.includes('Selesai')).length;
+
+            if(document.getElementById('stat-total')) document.getElementById('stat-total').innerText = total;
+            if(document.getElementById('stat-process')) document.getElementById('stat-process').innerText = process;
+            if(document.getElementById('stat-done')) document.getElementById('stat-done').innerText = done;
         }
 
-        function saveSettings(e) {
+        window.saveSettings = async function(e) {
             e.preventDefault();
             appData.price = Number(document.getElementById('setting-price').value);
             appData.adminWa = document.getElementById('setting-admin-wa').value;
             appData.theme = document.getElementById('setting-theme').value;
-            saveData();
 
+            try {
+                await update(ref(db), {
+                    price: appData.price,
+                    adminWa: appData.adminWa,
+                    theme: appData.theme
+                });
+            } catch(err) { console.error(err); }
+
+            applyTheme(appData.theme);
+            document.getElementById('display-price').innerText = formatRupiah(appData.price);
             document.getElementById('notification-modal').classList.remove('hidden');
         }
 
-        function closeNotificationModal() {
+        window.closeNotificationModal = function() {
             document.getElementById('notification-modal').classList.add('hidden');
         }
 
-        function addNewAdmin(e) {
+        window.addNewAdmin = async function(e) {
             e.preventDefault();
-            const name = document.getElementById('new-adm-name').value;
-            const pass = document.getElementById('new-adm-pass').value;
-            const code = document.getElementById('new-adm-code').value;
+            const name = document.getElementById('new-adm-name').value.trim();
+            const pass = document.getElementById('new-adm-pass').value.trim();
+            const code = document.getElementById('new-adm-code').value.trim();
 
-            if(code !== SECRET_REGISTRATION_CODE) {
-                alert('Kode khusus pendaftaran admin salah!');
+            if(!name || !pass || !code) {
+                alert('Semua kolom admin wajib diisi!');
                 return;
             }
 
-            appData.admins.push({ name, pass, code });
-            saveData();
+            const adminKey = 'adm-' + Date.now();
+            const newAdmin = { name, pass, code };
+
+            if(!appData.admins) appData.admins = {};
+            appData.admins[adminKey] = newAdmin;
+
+            try {
+                await set(ref(db, 'admins/' + adminKey), newAdmin);
+            } catch(e) { console.error(e); }
+
             renderAdminList();
             document.getElementById('new-adm-name').value = '';
             document.getElementById('new-adm-pass').value = '';
             document.getElementById('new-adm-code').value = '';
-            alert('Admin baru berhasil ditambahkan!');
+            alert('Admin baru berhasil ditambahkan ke Firebase!');
         }
 
-        function renderAdminList() {
+        window.renderAdminList = function() {
             const list = document.getElementById('admin-list-container');
-            list.innerHTML = appData.admins.map((adm, i) => `
-                <li class="py-2 px-3 flex justify-between items-center text-sm">
-                    <span class="font-medium text-slate-700"><i class="fa-solid fa-user-gear mr-2 text-primary"></i>${adm.name}</span>
-                    ${i > 0 ? `<button onclick="deleteAdmin(${i})" class="text-rose-500 hover:text-rose-700 text-xs"><i class="fa-solid fa-trash"></i> Hapus</button>` : `<span class="text-xs text-slate-400 italic">Utama</span>`}
-                </li>
-            `).join('');
+            if(!list) return;
+
+            const adminsObj = appData.admins || {};
+            const keys = Object.keys(adminsObj);
+
+            list.innerHTML = keys.map((key, i) => {
+                let adm = adminsObj[key];
+                return `
+                    <li class="py-2.5 px-3 flex justify-between items-center text-sm">
+                        <div>
+                            <span class="font-bold text-slate-700"><i class="fa-solid fa-user-gear mr-2 text-primary"></i>${adm.name}</span>
+                            <span class="text-xs text-slate-400 ml-2">(Kode: ${adm.code})</span>
+                        </div>
+                        ${keys.length > 1 ? `<button onclick="deleteAdmin('${key}')" class="text-rose-500 hover:text-rose-700 text-xs bg-rose-50 px-2.5 py-1 rounded-lg"><i class="fa-solid fa-trash"></i> Hapus</button>` : `<span class="text-xs text-slate-400 italic">Utama</span>`}
+                    </li>
+                `;
+            }).join('');
         }
 
-        function deleteAdmin(i) {
-            if(confirm('Hapus admin ini?')) {
-                appData.admins.splice(i, 1);
-                saveData();
+        window.deleteAdmin = async function(key) {
+            if(confirm('Yakin ingin menghapus akun admin ini?')) {
+                delete appData.admins[key];
+                try {
+                    await remove(ref(db, 'admins/' + key));
+                } catch(e) { console.error(e); }
                 renderAdminList();
             }
         }
